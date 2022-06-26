@@ -1,0 +1,70 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "products": [
+    {
+      "id": 3,
+      "productName": "Jaket Wanita",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "price": 120000,
+      "stock": 110,
+      "image": "https://dummyimage.com/300x400/a3a3a3/fff.jpg"
+    },
+    {
+      "productName": "Sepatu Kaca",
+      "description": "atjo  noiun  aewt anetoiu enot  aetn eotiuna et ",
+      "price": "300000",
+      "stock": "48",
+      "image": "https://dummyimage.com/300x400/a3a3a3/fff.jpg",
+      "id": 4
+    },
+    {
+      "productName": "Sepatu tali",
+      "description": "asdfa asfadf",
+      "price": "25000",
+      "stock": "65",
+      "image": "https://dummyimage.com/300x400/a3a3a3/fff.jpg",
+      "id": 5
+    },
+    {
+      "productName": "Sepatu hak tinggi",
+      "description": "antlkanet aetmlaentl",
+      "price": "74999",
+      "stock": "23",
+      "image": "https://dummyimage.com/300x400/a3a3a3/fff.jpg",
+      "id": 6
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "category_name": "Hoodie",
+      "slug": "hoodie"
+    },
+    {
+      "id": 3,
+      "category_name": "Clothes",
+      "slug": "clothes"
+    },
+    {
+      "category_name": "T-shirts",
+      "slug": "t-shirts",
+      "id": 4
+    }
+  ]
+}
