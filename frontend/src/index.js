@@ -1,14 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from '@chakra-ui/react';
+import { Provider } from "react-redux";
+import { combineReducers, createStore } from "redux";
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+
+
+import adminReducer from './redux/reducers/admin-reducers';
+import loadingReducer from './redux/reducers/loading-reducer';
+
+const Reducer = combineReducers({
+  admin : adminReducer,
+  loading : loadingReducer
+})
+
+//create global store
+const store = createStore(Reducer)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <ChakraProvider>
-    <App />
+    <BrowserRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </BrowserRouter>
   </ChakraProvider>
 );
 

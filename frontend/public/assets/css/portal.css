@@ -70,6 +70,56 @@
   --bs-highlight-bg: #fff3cd
 }
 
+/*--------------------------------------------------------------
+# Main
+--------------------------------------------------------------*/
+#main {
+  margin-top: 60px;
+  padding: 20px 30px;
+  transition: all 0.3s;
+}
+@media (max-width: 1199px) {
+  #main {
+    padding: 20px;
+  }
+}
+
+
+/*--------------------------------------------------------------
+# Page Title
+--------------------------------------------------------------*/
+.pagetitlenice {
+  margin-bottom: 10px;
+}
+.pagetitlenice h1 {
+  font-size: 24px;
+  margin-bottom: 0;
+  font-weight: 600;
+  color: #012970;
+}
+
+/* Breadcrumbs */
+.breadcrumbnice {
+  font-size: 14px;
+  font-family: "Nunito", sans-serif;
+  color: #899bbd;
+  font-weight: 600;
+}
+.breadcrumbnice a {
+  color: #899bbd;
+  transition: 0.3s;
+}
+.breadcrumbnice a:hover {
+  color: #51678f;
+}
+.breadcrumbnice .breadcrumbnice-item::before {
+  color: #899bbd;
+}
+.breadcrumbnice .active {
+  color: #51678f;
+  font-weight: 600;
+}
+
 *,
 *::before,
 *::after {
@@ -13973,6 +14023,12 @@ button.close:focus {
 
 .app-auth-footer .copyright {
   font-size: .75rem
+}
+
+.avatar-text {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-right: 10px;
 }
 
 @media(max-width: 767.98px) {

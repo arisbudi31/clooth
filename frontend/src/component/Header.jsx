@@ -1,7 +1,25 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Sidebar from "./Sidebar";
+import { useNavigate } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 
 function Header() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const onButtonLogout = () => {
+    return (
+      localStorage.removeItem("tokenAdmin")
+      // navigate('/admin/login')
+    )
+  }
+
+  const admin = useSelector((state) => state.admin)
+  console.log(`data admin:`, admin);
+
+  // useEffect(() => {
+
+  // }, [])
   return (
     <>
       <header className="app-header fixed-top">
@@ -40,6 +58,7 @@ function Header() {
 
                   {/* <!--//app-user-dropdown--> */}
                   <div className="app-utility-item app-user-dropdown dropdown d-flex align-items-center">
+                    <text className="avatar-text">Hi {admin.fullname}</text>
                     <img className="mr-3" src="/assets/images/user.png" alt="user profile" />
                     <a className="dropdown-toggle px-2" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                       aria-expanded="false">
@@ -50,7 +69,7 @@ function Header() {
                       <li>
                         <hr className="dropdown-divider" />
                       </li>
-                      <li><a className="dropdown-item" href="login.html">Log Out</a></li>
+                      <li><a className="dropdown-item" onClick={onButtonLogout} href="http://localhost:3000/admin/login">Log Out</a></li>
                     </ul>
                   </div>
                   {/* <!--//app-user-dropdown--> */}
