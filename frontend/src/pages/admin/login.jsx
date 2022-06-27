@@ -1,6 +1,9 @@
 import * as React from "react";
 import Axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {useDispatch} from 'react-redux'
+import { LOADING_END, LOADING_START } from "../../redux/actions/types";
+
 
 import {Box, 
     Text,
@@ -15,24 +18,20 @@ import {Box,
     InputRightElement} from '@chakra-ui/react'
 
 //assets
-import bgLogin from '../assets/images/bgLogin.jpg'
-import logo from '../assets/images/clooth-logo.png'
+import bgLogin from '../../assets/images/bgLogin.jpg'
+import logo from '../../assets/images/clooth-logo.png'
 
 //components
-import ForgotPassword from "../components/forgot-password";
+import ForgotPassword from "../../component/forgot-password";
 
-//redux
-import { useDispatch} from "react-redux";
-import { LOADING_END, LOADING_START } from "../redux/actions/types";
-
-const API_URL = process.env.REACT_APP_API_URL
+const API_URL = process.env.REACT_API_URL
 
 export default function Login() {
     const [forgotOpen, setForgotOpen] = React.useState(false);
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
     const navigate = useNavigate()
     const toast = useToast()
-
+    
     const [values, setValues] = React.useState({
       password: '',
       email: '',
@@ -42,10 +41,10 @@ export default function Login() {
     const handleChange = (prop) => (event) => {
         setValues({ ...values, [prop]: event.target.value });
     };
-
+    
     const handleClick = () => {
         setValues({
-        ...values,
+            ...values,
         showPassword: !values.showPassword,
         });
     };
@@ -58,19 +57,21 @@ export default function Login() {
             password: values.password
         }
         console.log(`body:`, bodyOnSignIn)
+        console.log(`api url:`, API_URL);
 
-        // dispatch({type: LOADING_START})
-        await Axios.post(API_URL + '/admin/login', bodyOnSignIn)
+        dispatch({type: LOADING_START})
+        await Axios.post('http://localhost:5000/api/admin/login', bodyOnSignIn)
         .then((resp) => {
         const arr = resp.headers["authtoken"].split(" ")
         const token = arr[1]
-        if(keep[0].checked){
-            localStorage.setItem("tokenAdmin", token)
+        localStorage.setItem("tokenAdmin", token)
+        if(!keep[0].checked){
+            localStorage.setItem("keepLogin", 'false')
         } else {
-            localStorage.setItem("tokenAdmin", '12345')
+            localStorage.setItem("keepLogin", 'true')
         }
 
-        // dispatch({type: LOADING_END})
+        dispatch({type: LOADING_END})
         toast({
             title: "Login Success",
             description: "Login Success",
@@ -82,7 +83,7 @@ export default function Login() {
         navigate('/admin')
         })
         .catch ((err) => {
-        // dispatch({type: LOADING_END})
+        dispatch({type: LOADING_END})
         console.log(`error login:`, err);
         if(err){
             return toast({
@@ -106,17 +107,17 @@ export default function Login() {
     }
 
     return(
-        <Box display={"flex"}>
-            <Box height={"100%"} width={"74%"} ml="-40px">
-                <img src={bgLogin} alt={"#"}/>
+        <Box display={"flex"} mt="-8">
+            <Box height={"100vh"} width={"74%"} ml="-40px">
+                <img src={bgLogin} alt={"background"}/>
             </Box>
             <Box height={"100%"} width={"30%"} position={"static"} ml="-25px">
-                <Box display={"flex"} alignItems={"center"} pt="10px" >
+                <Box display={"flex"} alignItems={"center"} >
                     <Avatar width="100px" height="100px" src={logo}></Avatar>
                     <Heading fontSize={"60px"} fontFamily="initial" >CLOOTH</Heading>
                 </Box>
                 <Box
-                    m="40px 0px 10px 0px"
+                    m="20px 0px 10px 0px"
                     display='flex'
                     flexDirection={"column"}
                     alignItems={"center"}

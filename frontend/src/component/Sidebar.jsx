@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, Link as RouterLink } from "react-router-dom";
+import logo from '../assets/images/clooth-logo.png'
 
 function Sidebar() {
   return (
@@ -9,8 +10,8 @@ function Sidebar() {
         <a href="#" id="sidepanel-close" className="sidepanel-close d-xl-none">&times;</a>
         <div className="app-branding">
           <RouterLink to={"/product"} className="app-logo d-flex align-items-center">
-            <img className="logo-icon me-2" src="/assets/images/app-logo.svg" alt="logo" />
-            <span className="logo-text">PORTAL</span>
+            <img className="logo-icon me-2" src={logo} alt="logo" />
+            <span className="logo-text">CLOOTH</span>
           </RouterLink>
         </div>
 
@@ -39,18 +40,18 @@ function Sidebar() {
               </Link>
             </li>
 
-            <li class="nav-item">
+            <li className="nav-item">
               <Link to={"/admin/categories"} className="nav-link">
-                <span class="nav-icon">
-                  <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-files" fill="currentColor"
+                <span className="nav-icon">
+                  <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-files" fill="currentColor"
                     xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
+                    <path fillRule="evenodd"
                       d="M4 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4z" />
                     <path
                       d="M6 0h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1H4a2 2 0 0 1 2-2z" />
                   </svg>
                 </span>
-                <span class="nav-link-text">Categories</span>
+                <span className="nav-link-text">Categories</span>
               </Link>
             </li>
             <li className="nav-item">
