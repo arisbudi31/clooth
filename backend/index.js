@@ -26,6 +26,7 @@ db.connect(err => {
 })
 
 app.use("/api", router.category)
+app.use("/api", router.product)
 
 app.get("/", (req, res) => {
   res.status(200).send("Welcome to warehouse app server")

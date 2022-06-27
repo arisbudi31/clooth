@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react"
 import Axios from "axios"
 import { useParams } from "react-router"
-import { Heading } from "@chakra-ui/react"
+import { Heading, Badge } from "@chakra-ui/react"
 import Header from "../../../component/Header"
 import Footer from "../../../component/Footer"
+
+const apiUrl = process.env.REACT_APP_API_URL
 
 function DetailProduct() {
 
@@ -13,17 +15,19 @@ function DetailProduct() {
   const [price, setPrice] = useState("")
   const [stock, setStock] = useState("")
   const [image, setImage] = useState("")
+  const [category, setCategory] = useState("")
 
   useEffect(() => {
 
-    Axios.get(`http://localhost:2000/products/${id}`)
+    Axios.get(`${apiUrl}/product/${id}`)
       .then(response => {
-        const data = response.data
+        const data = response.data.data[0]
         setProduct(data.productName)
         setDescription(data.description)
         setPrice(data.price)
         setStock(data.stock)
         setImage(data.image)
+        setCategory(data.categoryName)
       })
       .catch(err => {
         console.log(err)
@@ -45,18 +49,20 @@ function DetailProduct() {
             {/* <!--//row--> */}
 
             <div className="row g-4 d-flex justify-content-center">
-              <div className="col-8 col-md-8">
-                <div className="app-card app-card-doc shadow-sm h-500">
+              <div className="col-9 col-md-9">
+                <div className="app-card app-card-doc shadow-sm h-100">
                   <div className="app-card-body p-3 has-card-actions">
                     <div className="row">
                       <div className="col-5 col-md-5">
                         <img src={image} alt="product" />
                       </div>
-                      <div className="col-6 col-md-6 d-flex flex-column">
+                      <div className="col-7 col-md-7 d-flex flex-column">
                         <Heading as={"h4"} size="md" className="mb-3">{product}</Heading>
                         <Heading as={"h5"} size="sm" className="mb-3">Rp. {price}</Heading>
                         <p className="text-justify mb-3">{description}.</p>
                         <Heading as={"h5"} size="sm">Stock: {stock}</Heading>
+                        <Heading as={"h5"} size="sm" className="badge badge-primary">Stock: {stock}</Heading>
+                        <span><Badge variant='solid' colorScheme='purple' className="p-1">{category}</Badge></span>
                       </div>
                     </div>
                   </div>

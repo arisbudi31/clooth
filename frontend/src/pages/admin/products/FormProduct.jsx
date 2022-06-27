@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from "react"
-import { Box, Button, Flex, Heading, Image, Input, Text, Textarea, useToast } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Image, Input, Select, Text, Textarea, useToast } from "@chakra-ui/react"
 import Axios from "axios"
 import { useParams } from "react-router"
 import { useLocation, useNavigate } from "react-router-dom"
 
+const apiUrl = process.env.REACT_APP_API_URL
 function FormProduct(props) {
   // const location = useLocation()
   const [loading, setLoading] = useState(false)
@@ -12,11 +13,15 @@ function FormProduct(props) {
   const price = useRef("")
   const stock = useRef("")
 
+  const [saveImage, setSaveImage] = useState(null)
   const [prod, setProd] = useState("")
   const [desc, setDesc] = useState("")
   const [prc, setPrc] = useState("")
   const [stc, setStc] = useState("")
   const [title, setTitle] = useState("")
+  const [idCategoryBase, setIdCategoryBase] = useState(null)
+  const [idCategory, setIdCategory] = useState(null)
+  const [categories, setCategories] = useState([])
   const [imageBase, setImageBase] = useState("https://dummyimage.com/100x100/a3a3a3/fff.jpg")
   const [imageEdit, setImageEdit] = useState("https://dummyimage.com/100x100/a3a3a3/fff.jpg")
 
@@ -28,9 +33,11 @@ function FormProduct(props) {
   const imageHandler = (e) => {
 
     if (title === "Edit") {
+      setSaveImage(e.target.files[0])
       setImageEdit(URL.createObjectURL(e.target.files[0]))
     }
     else {
+      setSaveImage(e.target.files[0])
       setImageBase(URL.createObjectURL(e.target.files[0]))
     }
   }
@@ -38,7 +45,7 @@ function FormProduct(props) {
   const onButtonAdd = () => {
     setLoading(true)
 
-    Axios.post("http://localhost:2000/products", {
+    Axios.post(apiUrl + "/product", {
       productName: productName.current.value,
       description: description.current.value,
       price: price.current.value,
@@ -48,7 +55,7 @@ function FormProduct(props) {
       .then(response => {
         setLoading(false)
 
-        navigate('/product')
+        navigate('/admin/product')
 
         toast({
           position: "top",
@@ -75,21 +82,21 @@ function FormProduct(props) {
 
   const onButtonEdit = () => {
     setLoading(true)
-    Axios.patch(`http://localhost:2000/products/${id}`, {
+    Axios.patch(`${apiUrl}/product/${id}`, {
       productName: productName.current.value,
       description: description.current.value,
       price: price.current.value,
       stock: stock.current.value,
-      image: imageEdit
+      idCategory
     })
       .then(response => {
         setLoading(false)
 
-        navigate('/product')
+        navigate('/admin/product')
 
         toast({
           position: "top",
-          title: 'Add product success',
+          title: 'Edit product success',
           status: 'success',
           duration: 3000,
           isClosable: true
@@ -111,7 +118,46 @@ function FormProduct(props) {
   }
 
   const onButtonCancel = () => {
-    navigate('/product')
+    navigate('/admin/product')
+  }
+
+  const onUploadPicture = () => {
+    setLoading(true)
+    if (!saveImage) {
+      setLoading(false)
+      return toast({
+        position: "top",
+        title: 'Gambar perlu di upload',
+        status: 'error',
+        duration: 2000,
+        isClosable: true
+      })
+    }
+
+    const formData = new FormData()
+
+    formData.append("image", saveImage, saveImage.name)
+
+    Axios.post(apiUrl + `/product/upload/${id}`, formData)
+      .then(response => {
+        setLoading(false)
+        // console.log(response.data.data)
+        toast({
+          position: "top",
+          title: 'Gambar berhasil di upload',
+          status: 'success',
+          duration: 2000,
+          isClosable: true
+        })
+
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  const onChangeCategory = (e) => {
+    setIdCategory(e.target.value)
   }
 
   useEffect(() => {
@@ -119,21 +165,32 @@ function FormProduct(props) {
 
     setTitle(titlePathname)
 
-    console.log(id)
-    console.log(location.pathname)
-
-    Axios.get(`http://localhost:2000/products/${id}`)
+    Axios.get(`${apiUrl}/product/${id}`)
       .then(response => {
-        const data = response.data
+        console.log(response.data.data[0])
+        const data = response.data.data[0]
         setProd(data.productName)
         setDesc(data.description)
         setPrc(data.price)
         setStc(data.stock)
         setImageEdit(data.image)
+        setIdCategoryBase(data.idCategory)
       })
       .catch(err => {
         console.log(err)
       })
+
+    Axios.get(`${apiUrl}/category`)
+      .then(response => {
+        console.log(response.data.data)
+        const data = response.data.data
+        setCategories(data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+
 
   }, [])
 
@@ -173,26 +230,47 @@ function FormProduct(props) {
           <Text marginBottom="15px">Stock</Text>
           <Input defaultValue={title === "Edit" ? stc : ""} ref={stock} marginBottom="25px" type="number" />
 
-          <Text marginBottom="15px">Product Image</Text>
+          <Text marginBottom="15px">Category</Text>
+          <Select marginBottom="15px" placeholder={title === "Edit" ? null : 'Select option'} onClick={onChangeCategory}>
+            {
+              categories.map(category => {
+                return (
+                  <option
+                    defaultValue={category.id}
+                    selected=
+                    {
+                      idCategoryBase === category.id ? true : false
+                    }>
+                    {category.categoryName}
+                  </option>
+                )
+              })
+            }
+          </Select>
+
           {title === "Edit" ?
-            <Image objectFit={"cover"} boxSize={"100px"} mb={2}
-              src={imageEdit}
-              alt='Product Image'
-              borderRadius={8} />
+            <>
+              <Text marginBottom="15px">Product Image</Text>
+              <Image objectFit={"cover"} boxSize={"100px"} mb={2}
+                src={imageEdit}
+                alt='Product Image'
+                borderRadius={8} />
+              <Box>
+                <Input
+                  onChange={imageHandler}
+                  marginBottom="25px"
+                  type="file"
+                  accept="image/*" w={"50%"} />
+                <Button ml={2} disabled={loading} onClick={onUploadPicture}>Upload picture</Button>
+              </Box>
+            </>
             :
-            <Image objectFit={"cover"} boxSize={"100px"} mb={2}
-              src={imageBase}
-              alt='Product image'
-              borderRadius={8} />
+            // <Image objectFit={"cover"} boxSize={"100px"} mb={2}
+            //   src={imageBase}
+            //   alt='Product image'
+            //   borderRadius={8} />
+            null
           }
-          <Box>
-            <Input
-              onChange={imageHandler}
-              marginBottom="25px"
-              type="file"
-              accept="image/*" w={"50%"} />
-            <Button ml={2} disabled={loading} onClick="">Upload picture</Button>
-          </Box>
 
           <Button
             colorScheme='teal'

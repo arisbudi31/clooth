@@ -7,75 +7,16 @@ const fs = require("fs")
 const { categorySchema } = require("../helper/validation_schema")
 
 module.exports.getCategory = async (req, res) => {
-  try {
 
-    const GET_CATEGORY = `SELECT * FROM categories;`
+  const per_page = Number(req.query.per_page) || 3
+  const current_page = Number(req.query.current_page) || 1
+  const search = req.query.search || ""
+  try {
+    const offset = (current_page - 1) * per_page
+
+    const GET_CATEGORY = `SELECT * FROM categories WHERE categoryName LIKE '%${search}%' LIMIT ${offset}, ${per_page};`
 
     const [categories] = await db.execute(GET_CATEGORY)
-
-    if (!categories.length) {
-      const responseStatus = new createResponse(
-        httpStatus.BAD_REQUEST,
-        'Error', false, 1, 1, 'Kategori tidak ditemukan'
-      )
-
-      res.status(responseStatus.status).send(responseStatus)
-      throw new createError(httpStatus.BAD_REQUEST, 'kategori tidak ditemukan')
-    }
-
-    const responseStatus = new createResponse(
-      httpStatus.OK,
-      'success', true, 1, 1, categories
-    )
-
-    res.status(responseStatus.status).send(responseStatus)
-
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-module.exports.getCategoryByName = async (req, res) => {
-
-  const categoryName = req.params.name
-
-  try {
-
-    const GET_CATEGORY_BY_NAME = `SELECT * FROM categories WHERE categoryName LIKE '%${categoryName}%';`
-
-    const [categories] = await db.execute(GET_CATEGORY_BY_NAME)
-
-    if (!categories.length) {
-      const responseStatus = new createResponse(
-        httpStatus.BAD_REQUEST,
-        'Error', false, 1, 1, 'Kategori tidak ditemukan'
-      )
-
-      res.status(responseStatus.status).send(responseStatus)
-      throw new createError(httpStatus.BAD_REQUEST, 'kategori tidak ditemukan')
-    }
-
-    const responseStatus = new createResponse(
-      httpStatus.OK,
-      'success', true, 1, 1, categories
-    )
-
-    res.status(responseStatus.status).send(responseStatus)
-
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-module.exports.getCategoryById = async (req, res) => {
-
-  const idCategory = req.params.id
-
-  try {
-
-    const GET_CATEGORY_BY_ID = `SELECT * FROM categories WHERE id = ${idCategory};`
-
-    const [categories] = await db.execute(GET_CATEGORY_BY_ID)
 
     if (!categories.length) {
       const responseStatus = new createResponse(

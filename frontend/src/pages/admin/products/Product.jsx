@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import Axios from "axios"
 import { Link as RouterLink } from "react-router-dom"
 import Header from './../../../component/Header';
 import Loading from "../../../component/subcomponent/Loading";
-import { Heading, useToast } from "@chakra-ui/react";
+import { Badge, Heading, useToast } from "@chakra-ui/react";
 import Crud from './../../../component/subcomponent/Crud';
 import Pagination from "../../../component/Pagination";
 import Footer from "../../../component/Footer";
 import ModalDelete from "../../../component/subcomponent/ModalDelete";
+
+const apiUrl = process.env.REACT_APP_API_URL
 
 function Product() {
 
@@ -16,6 +18,8 @@ function Product() {
   const [id, setId] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  const search = useRef("")
 
   const toast = useToast()
 
@@ -32,9 +36,9 @@ function Product() {
 
   const onConfirmDelete = () => {
     setLoading(true)
-    Axios.delete(`http://localhost:2000/products/${id}`)
+    Axios.delete(`${apiUrl}/product/${id}`)
       .then(res => {
-        Axios.get(`http://localhost:2000/products`)
+        Axios.get(`${apiUrl}/product`)
           .then(res => {
             setProducts(res.data)
             setLoading(false)
@@ -79,23 +83,62 @@ function Product() {
       })
   }
 
-  useEffect(() => {
+  const onHandleSearch = () => {
+
     setLoading(true)
-    Axios.get("http://localhost:2000/products")
+    Axios.get(apiUrl + "/product", {
+      params: {
+        search: search.current.value
+      }
+    })
       .then(response => {
         setLoading(false)
-        setProducts(response.data)
+        // console.log(response.data.data)
+        setProducts(response.data.data)
+      })
+      .catch(error => {
+        setLoading(false)
+        console.log(error)
+      })
+  }
+
+  const onHandleCategory = (e) => {
+    setLoading(true)
+    Axios.get(apiUrl + "/product", {
+      params: {
+        filter: e.target.value
+      }
+    })
+      .then(response => {
+        setLoading(false)
+        // console.log(response.data.data)
+        setProducts(response.data.data)
+      })
+      .catch(error => {
+        setLoading(false)
+        console.log(error)
+      })
+  }
+
+  useEffect(() => {
+    setLoading(true)
+    Axios.get(`${apiUrl}/product`)
+      .then(response => {
+        setLoading(false)
+        setProducts(response.data.data)
       })
       .catch(err => {
+        setLoading(false)
         console.log(err)
       })
 
-    Axios.get("http://localhost:2000/categories")
+    Axios.get(`${apiUrl}/category`)
       .then(response => {
         setLoading(false)
-        setCategories(response.data)
+        setCategories(response.data.data)
       })
       .catch(err => {
+        setLoading(false)
         console.log(err)
       })
   }, [])
@@ -116,23 +159,23 @@ function Product() {
                 <div className="page-utilities">
                   <div className="row g-2 justify-content-start justify-content-md-end align-items-center">
                     <div className="col-auto">
-                      <form className="docs-search-form row gx-1 align-items-center">
+                      <div className="row gx-1 align-items-center">
                         <div className="col-auto">
-                          <input type="text" id="search-docs" name="searchdocs" className="form-control search-docs" placeholder="Search" />
+                          <input type="text" className="form-control" placeholder="Search" ref={search} />
                         </div>
                         <div className="col-auto">
-                          <button type="submit" className="btn app-btn-secondary">Search</button>
+                          <button type="btn" className="btn app-btn-secondary" onClick={onHandleSearch}>Search</button>
                         </div>
-                      </form>
+                      </div>
 
                     </div>
                     <div className="col-auto">
-                      <select className="form-select w-auto">
-                        <option defaultValue="option-1">All</option>
+                      <select className="form-select w-auto" onChange={onHandleCategory}>
+                        <option defaultValue="" selected>All</option>
                         {
                           categories.map(category => {
                             return (
-                              <option defaultValue={category.id}>{category.category_name}</option>
+                              <option defaultValue={category.categoryName}>{category.categoryName}</option>
                             )
                           })
                         }
@@ -172,7 +215,8 @@ function Product() {
                           <div className="app-doc-meta">
                             <ul className="list-unstyled mb-2">
                               <li className="mb-2"><span className="text-secondary">Rp. </span>{product.price}</li>
-                              <li><span className="text-secondary">Stock:</span> {product.stock}</li>
+                              <li><span className="text-secondary mb-2">Stock:</span> {product.stock}</li>
+                              <li className="my-2"><Badge variant='solid' colorScheme='purple'>{product.categoryName}</Badge></li>
                             </ul>
                           </div>
                           <div className="app-card-actions">
