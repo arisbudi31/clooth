@@ -24,7 +24,7 @@ function ModalDelete(props) {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader fontSize="lg" fontWeight="bold">
-            Delete Post Feed
+            {props.state.title}
           </ModalHeader>
           <ModalCloseButton onClick={props.state.onBtnCancel} />
 

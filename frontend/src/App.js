@@ -11,6 +11,7 @@ import FormCategories from './pages/admin/categories/FormCategories';
 import Login from './pages/admin/login';
 import ResetPassword from './pages/admin/reset';
 import HomeAdmin from './pages/admin/home-admin';
+import ManageUsers from "./pages/admin/Manage/manage-users";
 import {GET_ADMIN_DATA} from './redux/actions/types'
 
 
@@ -38,6 +39,7 @@ function App() {
         <Routes>
           <Route path="/admin" element={<HomeAdmin/>}/>
           <Route path="/admin/login" element={<Login/>}/>
+          <Route path="/admin/manage-users" element={<ManageUsers/>}/>
           <Route path="/admin/reset/:adminname/reset/:emailAdmin" element={<ResetPassword/>}/>
           <Route path="/admin/product" element={<Product />} />
           <Route path="/admin/edit-product/:id" element={<FormProduct />} />
