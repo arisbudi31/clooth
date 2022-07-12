@@ -8,9 +8,9 @@ function Sidebar() {
       <div className="sidepanel-inner d-flex flex-column">
         <a href="#" id="sidepanel-close" className="sidepanel-close d-xl-none">&times;</a>
         <div className="app-branding">
-          <RouterLink to={"/product"} className="app-logo d-flex align-items-center">
+          <RouterLink to={"/admin/product"} className="app-logo d-flex align-items-center">
             <img className="logo-icon me-2" src="/assets/images/app-logo.svg" alt="logo" />
-            <span className="logo-text">PORTAL</span>
+            <span className="logo-text">CLOOTH</span>
           </RouterLink>
         </div>
 

@@ -13,6 +13,8 @@ module.exports.getProduct = async (req, res) => {
   const current_page = Number(req.query.current_page) || 1
   const search = req.query.search || ""
   const filter = req.query.filter || ""
+  const sortBy = req.query.sort ? "price" : "productName"
+  const sort = req.query.sort ? req.query.sort : "asc"
 
   try {
     const offset = (current_page - 1) * per_page
@@ -21,6 +23,7 @@ module.exports.getProduct = async (req, res) => {
     FROM warehouse.products AS p
     JOIN warehouse.categories AS c ON p.idCategory = c.id
     WHERE p.productName LIKE "%${search}%" AND c.categoryName LIKE "%${filter}%" 
+    ORDER BY p.${sortBy} ${sort}
     LIMIT ${offset}, ${per_page};`
 
     const [products] = await db.execute(GET_PRODUCTS)
@@ -35,9 +38,16 @@ module.exports.getProduct = async (req, res) => {
       throw new createError(httpStatus.BAD_REQUEST, 'Produk tidak ditemukan')
     }
 
+    const COUNT_DATA = `SELECT COUNT (*) as total
+    FROM warehouse.products AS p
+    JOIN warehouse.categories AS c ON p.idCategory = c.id
+    WHERE p.productName LIKE "%${search}%" AND c.categoryName LIKE "%${filter}%";`
+
+    const [total] = await db.execute(COUNT_DATA)
+
     const responseStatus = new createResponse(
       httpStatus.OK,
-      'success', true, 1, 1, products
+      'success', true, total[0], 1, products
     )
 
     res.status(responseStatus.status).send(responseStatus)
@@ -100,7 +110,8 @@ module.exports.editProduct = async (req, res) => {
 
     const { productName, description, price, stock, idCategory } = req.body
 
-    const PRODUCT = `SELECT * FROM categories WHERE id = ?;`
+
+    const PRODUCT = `SELECT * FROM products WHERE id = ?;`
 
     const [product] = await db.execute(PRODUCT, [idProduct])
 
@@ -131,6 +142,7 @@ module.exports.editProduct = async (req, res) => {
 }
 
 module.exports.addProduct = async (req, res) => {
+
   try {
 
     const { error } = productSchema.validate(req.body)
@@ -145,7 +157,7 @@ module.exports.addProduct = async (req, res) => {
       throw new createError(httpStatus.BAD_REQUEST, error.details[0].message)
     }
 
-    const { productName, description, price, stock, idCategory } = req.body
+    const { productName, description, price, stock, idCategory, image } = req.body
 
     const CHECK_PRODUCT = `SELECT * FROM products WHERE productName = ?;`
 
@@ -161,7 +173,9 @@ module.exports.addProduct = async (req, res) => {
       throw new createError(httpStatus.BAD_REQUEST, 'Data product sudah ada')
     }
 
-    const ADD_PRODUCT = `INSERT INTO products(productName, description, price, stock, idCategory) VALUES (${db.escape(productName)}, ${db.escape(description)}, ${db.escape(price)}, ${db.escape(stock)}, ${db.escape(idCategory)})`
+    const ADD_PRODUCT = `INSERT INTO products(productName, description, price, stock, idCategory, image) 
+    VALUES (${db.escape(productName)}, ${db.escape(description)}, ${db.escape(price)}, ${db.escape(stock)}, ${db.escape(idCategory)}, ${db.escape(image)})`
+
     await db.execute(ADD_PRODUCT)
 
     const responseStatus = new createResponse(

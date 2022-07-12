@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 const apiUrl = process.env.REACT_APP_API_URL
 function FormProduct(props) {
-  // const location = useLocation()
+
   const [loading, setLoading] = useState(false)
   const productName = useRef("")
   const description = useRef("")
@@ -42,14 +42,15 @@ function FormProduct(props) {
     }
   }
 
-  const onButtonAdd = () => {
+  const onButtonAdd = async () => {
     setLoading(true)
 
-    Axios.post(apiUrl + "/product", {
+    await Axios.post(apiUrl + "/product", {
       productName: productName.current.value,
       description: description.current.value,
       price: price.current.value,
       stock: stock.current.value,
+      idCategory,
       image: "https://dummyimage.com/300x400/a3a3a3/fff.jpg"
     })
       .then(response => {
@@ -68,16 +69,16 @@ function FormProduct(props) {
       })
       .catch(err => {
         setLoading(false)
-        console.log(err)
 
         toast({
           position: "top",
-          title: 'Something wrong',
-          status: 'danger',
+          title: err.response.data.data,
+          status: 'error',
           duration: 3000,
           isClosable: true
         })
       })
+
   }
 
   const onButtonEdit = () => {
@@ -87,7 +88,7 @@ function FormProduct(props) {
       description: description.current.value,
       price: price.current.value,
       stock: stock.current.value,
-      idCategory
+      idCategory: idCategory ? idCategory : idCategoryBase
     })
       .then(response => {
         setLoading(false)
@@ -141,7 +142,7 @@ function FormProduct(props) {
     Axios.post(apiUrl + `/product/upload/${id}`, formData)
       .then(response => {
         setLoading(false)
-        // console.log(response.data.data)
+
         toast({
           position: "top",
           title: 'Gambar berhasil di upload',
@@ -167,7 +168,6 @@ function FormProduct(props) {
 
     Axios.get(`${apiUrl}/product/${id}`)
       .then(response => {
-        console.log(response.data.data[0])
         const data = response.data.data[0]
         setProd(data.productName)
         setDesc(data.description)
@@ -182,7 +182,6 @@ function FormProduct(props) {
 
     Axios.get(`${apiUrl}/category`)
       .then(response => {
-        console.log(response.data.data)
         const data = response.data.data
         setCategories(data)
       })
@@ -219,7 +218,7 @@ function FormProduct(props) {
             fontWeight={"bold"}
           >{title} Product</Text>
           <Text marginBottom="15px">Product Name</Text>
-          <Input defaultValue={title === "Edit" ? prod : ""} ref={productName} marginBottom="15px" type="text" />
+          <Input defaultValue={title === "Edit" ? prod : ""} ref={productName} marginBottom="15px" type="text" minLength={6} />
 
           <Text marginBottom="15px">Description</Text>
           <Textarea defaultValue={title === "Edit" ? desc : ""} height={"200px"} ref={description} marginBottom="25px" type="text" />
@@ -231,12 +230,12 @@ function FormProduct(props) {
           <Input defaultValue={title === "Edit" ? stc : ""} ref={stock} marginBottom="25px" type="number" />
 
           <Text marginBottom="15px">Category</Text>
-          <Select marginBottom="15px" placeholder={title === "Edit" ? null : 'Select option'} onClick={onChangeCategory}>
+          <Select defaultValue={0} marginBottom="15px" placeholder={title === "Edit" ? "ok" : 'Select option'} onChange={onChangeCategory}>
             {
               categories.map(category => {
                 return (
                   <option
-                    defaultValue={category.id}
+                    value={category.id}
                     selected=
                     {
                       idCategoryBase === category.id ? true : false

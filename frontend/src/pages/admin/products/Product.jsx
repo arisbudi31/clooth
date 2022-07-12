@@ -15,11 +15,17 @@ function Product() {
 
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
+  const [category, setCategory] = useState(null)
+  const [search, setSearch] = useState("")
+  const [currentPage, setCurrentPage] = useState(null)
   const [id, setId] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [totalPage, setTotalPage] = useState(null)
+  const [sort, setSort] = useState(null)
 
-  const search = useRef("")
+  const searcKey = useRef("")
+  const sortSelected = useRef(null)
 
   const toast = useToast()
 
@@ -40,7 +46,7 @@ function Product() {
       .then(res => {
         Axios.get(`${apiUrl}/product`)
           .then(res => {
-            setProducts(res.data)
+            setProducts(res.data.data)
             setLoading(false)
             setConfirmDelete(false)
             setId(null)
@@ -84,54 +90,58 @@ function Product() {
   }
 
   const onHandleSearch = () => {
-
-    setLoading(true)
-    Axios.get(apiUrl + "/product", {
-      params: {
-        search: search.current.value
-      }
-    })
-      .then(response => {
-        setLoading(false)
-        // console.log(response.data.data)
-        setProducts(response.data.data)
-      })
-      .catch(error => {
-        setLoading(false)
-        console.log(error)
-      })
+    setSearch(searcKey.current.value)
   }
 
   const onHandleCategory = (e) => {
-    setLoading(true)
-    Axios.get(apiUrl + "/product", {
-      params: {
-        filter: e.target.value
-      }
-    })
-      .then(response => {
-        setLoading(false)
-        // console.log(response.data.data)
-        setProducts(response.data.data)
-      })
-      .catch(error => {
-        setLoading(false)
-        console.log(error)
-      })
+    console.log(e.target.value)
+    const selectCategory = e.target.value === "All" ? "" : e.target.value
+    setCategory(selectCategory)
+  }
+
+  const onHandlePageClick = (data) => {
+    setCurrentPage(data.selected + 1)
+  }
+
+  const onHandleSort = () => {
+    setSort(sortSelected.current.value)
   }
 
   useEffect(() => {
     setLoading(true)
-    Axios.get(`${apiUrl}/product`)
+    Axios.get(`${apiUrl}/product`, {
+      params: {
+        search: search,
+        filter: category,
+        sort: sort,
+        current_page: currentPage,
+        per_page: 4
+      }
+    })
       .then(response => {
         setLoading(false)
         setProducts(response.data.data)
+
+        const total = response.data.total_count.total
+        setTotalPage(Math.ceil(total / 4))
       })
       .catch(err => {
         setLoading(false)
+        setProducts([])
+        setTotalPage(0)
         console.log(err)
-      })
 
+        toast({
+          position: "top",
+          title: err?.response?.data?.data,
+          status: 'error',
+          duration: 3000,
+          isClosable: true
+        })
+      })
+  }, [search, category, currentPage, sort])
+
+  useEffect(() => {
     Axios.get(`${apiUrl}/category`)
       .then(response => {
         setLoading(false)
@@ -161,7 +171,7 @@ function Product() {
                     <div className="col-auto">
                       <div className="row gx-1 align-items-center">
                         <div className="col-auto">
-                          <input type="text" className="form-control" placeholder="Search" ref={search} />
+                          <input type="text" className="form-control" placeholder="Search" ref={searcKey} />
                         </div>
                         <div className="col-auto">
                           <button type="btn" className="btn app-btn-secondary" onClick={onHandleSearch}>Search</button>
@@ -170,22 +180,22 @@ function Product() {
 
                     </div>
                     <div className="col-auto">
-                      <select className="form-select w-auto" onChange={onHandleCategory}>
-                        <option defaultValue="" selected>All</option>
+                      <select defaultValue={""} className="form-select w-auto" onChange={onHandleCategory}>
+                        <option value="" selected>All</option>
                         {
                           categories.map(category => {
                             return (
-                              <option defaultValue={category.categoryName}>{category.categoryName}</option>
+                              <option key={category.id} value={category.categoryName}>{category.categoryName}</option>
                             )
                           })
                         }
                       </select>
                     </div>
                     <div className="col-auto">
-                      <select className="form-select w-auto">
-                        <option defaultValue="option-1">Sort to higher price</option>
-                        <option defaultValue="option-2">Sort to lower price</option>
-                        <option defaultValue="option-3">Sort trend</option>
+                      <select defaultValue={""} className="form-select w-auto" ref={sortSelected} onChange={onHandleSort}>
+                        <option value="">No Sorting</option>
+                        <option value="asc">Sort low to higher price</option>
+                        <option value="desc">Sort high to lower price</option>
                       </select>
                     </div>
                     <div className="col-auto">
@@ -213,7 +223,7 @@ function Product() {
                         <div className="app-card-body p-3 has-card-actions">
                           <Heading as={"h2"} className="app-doc-title truncate mb-2">{product.productName}</Heading>
                           <div className="app-doc-meta">
-                            <ul className="list-unstyled mb-2">
+                            <ul key={product.id} className="list-unstyled mb-2">
                               <li className="mb-2"><span className="text-secondary">Rp. </span>{product.price}</li>
                               <li><span className="text-secondary mb-2">Stock:</span> {product.stock}</li>
                               <li className="my-2"><Badge variant='solid' colorScheme='purple'>{product.categoryName}</Badge></li>
@@ -236,7 +246,11 @@ function Product() {
                 })
               }
             </div>
-            <Pagination />
+            {
+              totalPage ? <Pagination state={{ onHandlePageClick, totalPage }} />
+                :
+                null
+            }
           </div>
         </div>
         <Footer />

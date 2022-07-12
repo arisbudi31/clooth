@@ -28,9 +28,13 @@ module.exports.getCategory = async (req, res) => {
       throw new createError(httpStatus.BAD_REQUEST, 'kategori tidak ditemukan')
     }
 
+    const TOTAL_CATEGORY = `SELECT COUNT (*) as total_category FROM categories WHERE categoryName LIKE '%${search}%';`
+
+    const [totalCategory] = await db.execute(TOTAL_CATEGORY)
+
     const responseStatus = new createResponse(
       httpStatus.OK,
-      'success', true, 1, 1, categories
+      'success', true, totalCategory[0], 1, categories
     )
 
     res.status(responseStatus.status).send(responseStatus)
@@ -150,6 +154,19 @@ module.exports.deleteCategory = async (req, res) => {
 
       res.status(responseStatus.status).send(responseStatus)
       throw new createError(httpStatus.BAD_REQUEST, 'kategori tidak ditemukan')
+    }
+
+    const CHECK_USAGE_CATEGORY = `SELECT * FROM products WHERE idCategory = ?; `
+    const [isUsage] = await db.execute(CHECK_CATEGORY, [idCategory])
+
+    if (isUsage.length) {
+      const responseStatus = new createResponse(
+        httpStatus.BAD_REQUEST,
+        'Error', false, 1, 1, 'Category is used by some products'
+      )
+
+      res.status(responseStatus.status).send(responseStatus)
+      throw new createError(httpStatus.BAD_REQUEST, 'Category is used by some products')
     }
 
     const DELETE_CATEGORY = `DELETE FROM categories WHERE id = ?;`
