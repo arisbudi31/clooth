@@ -57,6 +57,14 @@ function Sidebar() {
               </Link>
             </li>
             <li className="nav-item">
+              <a className="nav-link" href="manage-users">
+                <span className="nav-icon">
+                  <i class="bi bi-person"></i>
+                </span>
+                <span className="nav-link-text">Users</span>
+              </a>
+            </li>
+            <li className="nav-item">
               <a className="nav-link" href="orders.html">
                 <span className="nav-icon">
                   <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-card-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
