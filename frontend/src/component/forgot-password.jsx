@@ -6,9 +6,6 @@ import {
   Text,
   Button,
   Input,
-  FormLabel,
-  FormHelperText,
-  FormControl,
   CloseButton,
   useToast
 } from "@chakra-ui/react";
@@ -25,10 +22,8 @@ export default function ForgotPassword({onButtonClose}) {
         }
         console.log(`body:`, bodyOnReset);
   
-        // dispatch({type: LOADING_START})
-        await axios.post(API_URL + '/reset', bodyOnReset)
+        await axios.post('http://localhost:2000/api/admin/forgot-password', bodyOnReset)
         .then((resp) => {
-        //   dispatch({type: LOADING_END})
           console.log(`respond after req:`, resp);
           toast({
             title: "Request Success",
@@ -41,7 +36,6 @@ export default function ForgotPassword({onButtonClose}) {
           onButtonClose()          
         })
         .catch ((err) => {
-        //   dispatch({type: LOADING_END})
           console.log(`error after req:`, err);
           if(err){
             return toast({

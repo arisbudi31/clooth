@@ -1,6 +1,5 @@
 import React, {useRef} from "react";
 import { useState } from "react";
-// import { useDispatch} from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
     Flex,
@@ -40,7 +39,7 @@ export default function ResetPassword () {
             repassword: repasswordOnReset.current.value
         }
 
-        await axios.patch(API_URL + `/admin/reset-password/${adminname}`, bodyOnReset)
+        await axios.patch(`http://localhost:5000/api/admin/reset-password/${adminname}`, bodyOnReset)
         .then((resp) => {
             setSending(false)
             console.log(`resp:`, resp);
@@ -51,7 +50,7 @@ export default function ResetPassword () {
                 duration: 5000,
                 isClosable: true,
             })
-            setTimeout(() => navigate('/'), 3000)
+            setTimeout(() => navigate('/admin/login'), 3000)
         })
         .catch((err) => {
             console.log(`error:`, err);
@@ -69,7 +68,7 @@ export default function ResetPassword () {
 
     }
     return (
-        <Flex bgColor={"#f1f2f6"} fontFamily="Ubuntu">
+        <Flex bgColor={"#f1f2f6"} fontFamily="Ubuntu" mt="-55px">
             <Box w="90vw" h="100vh" p="5% 25%" >
                 <Box
                     border={"4px solid #1e3799"}

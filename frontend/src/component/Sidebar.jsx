@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import logo from '../assets/images/clooth-logo.png'
 
 function Sidebar() {
   return (
@@ -8,8 +9,10 @@ function Sidebar() {
       <div className="sidepanel-inner d-flex flex-column">
         <a href="#" id="sidepanel-close" className="sidepanel-close d-xl-none">&times;</a>
         <div className="app-branding">
-          <RouterLink to={"/admin/product"} className="app-logo d-flex align-items-center">
-            <img className="logo-icon me-2" src="/assets/images/app-logo.svg" alt="logo" />
+          <RouterLink to={"/admin/product"} className="app-logo d-flex align-items-center" />
+          <img className="logo-icon me-2" src="/assets/images/app-logo.svg" alt="logo" />
+          <RouterLink to={"/product"} className="app-logo d-flex align-items-center">
+            <img className="logo-icon me-2" src={logo} alt="logo" />
             <span className="logo-text">CLOOTH</span>
           </RouterLink>
         </div>
