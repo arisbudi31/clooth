@@ -1,22 +1,27 @@
 import React, { useRef, useState, useEffect } from "react"
-import { Box, Button, Flex, Heading, Image, Input, Text, Textarea, useToast } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Image, Input, Select, Text, Textarea, useToast } from "@chakra-ui/react"
 import Axios from "axios"
 import { useParams } from "react-router"
 import { useLocation, useNavigate } from "react-router-dom"
 
+const apiUrl = process.env.REACT_APP_API_URL
 function FormProduct(props) {
-  // const location = useLocation()
+
   const [loading, setLoading] = useState(false)
   const productName = useRef("")
   const description = useRef("")
   const price = useRef("")
   const stock = useRef("")
 
+  const [saveImage, setSaveImage] = useState(null)
   const [prod, setProd] = useState("")
   const [desc, setDesc] = useState("")
   const [prc, setPrc] = useState("")
   const [stc, setStc] = useState("")
   const [title, setTitle] = useState("")
+  const [idCategoryBase, setIdCategoryBase] = useState(null)
+  const [idCategory, setIdCategory] = useState(null)
+  const [categories, setCategories] = useState([])
   const [imageBase, setImageBase] = useState("https://dummyimage.com/100x100/a3a3a3/fff.jpg")
   const [imageEdit, setImageEdit] = useState("https://dummyimage.com/100x100/a3a3a3/fff.jpg")
 
@@ -28,27 +33,30 @@ function FormProduct(props) {
   const imageHandler = (e) => {
 
     if (title === "Edit") {
+      setSaveImage(e.target.files[0])
       setImageEdit(URL.createObjectURL(e.target.files[0]))
     }
     else {
+      setSaveImage(e.target.files[0])
       setImageBase(URL.createObjectURL(e.target.files[0]))
     }
   }
 
-  const onButtonAdd = () => {
+  const onButtonAdd = async () => {
     setLoading(true)
 
-    Axios.post("http://localhost:2000/products", {
+    await Axios.post(apiUrl + "/product", {
       productName: productName.current.value,
       description: description.current.value,
       price: price.current.value,
       stock: stock.current.value,
+      idCategory,
       image: "https://dummyimage.com/300x400/a3a3a3/fff.jpg"
     })
       .then(response => {
         setLoading(false)
 
-        navigate('/product')
+        navigate('/admin/product')
 
         toast({
           position: "top",
@@ -61,35 +69,35 @@ function FormProduct(props) {
       })
       .catch(err => {
         setLoading(false)
-        console.log(err)
 
         toast({
           position: "top",
-          title: 'Something wrong',
-          status: 'danger',
+          title: err.response.data.data,
+          status: 'error',
           duration: 3000,
           isClosable: true
         })
       })
+
   }
 
   const onButtonEdit = () => {
     setLoading(true)
-    Axios.patch(`http://localhost:2000/products/${id}`, {
+    Axios.patch(`${apiUrl}/product/${id}`, {
       productName: productName.current.value,
       description: description.current.value,
       price: price.current.value,
       stock: stock.current.value,
-      image: imageEdit
+      idCategory: idCategory ? idCategory : idCategoryBase
     })
       .then(response => {
         setLoading(false)
 
-        navigate('/product')
+        navigate('/admin/product')
 
         toast({
           position: "top",
-          title: 'Add product success',
+          title: 'Edit product success',
           status: 'success',
           duration: 3000,
           isClosable: true
@@ -111,7 +119,46 @@ function FormProduct(props) {
   }
 
   const onButtonCancel = () => {
-    navigate('/product')
+    navigate('/admin/product')
+  }
+
+  const onUploadPicture = () => {
+    setLoading(true)
+    if (!saveImage) {
+      setLoading(false)
+      return toast({
+        position: "top",
+        title: 'Gambar perlu di upload',
+        status: 'error',
+        duration: 2000,
+        isClosable: true
+      })
+    }
+
+    const formData = new FormData()
+
+    formData.append("image", saveImage, saveImage.name)
+
+    Axios.post(apiUrl + `/product/upload/${id}`, formData)
+      .then(response => {
+        setLoading(false)
+
+        toast({
+          position: "top",
+          title: 'Gambar berhasil di upload',
+          status: 'success',
+          duration: 2000,
+          isClosable: true
+        })
+
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  const onChangeCategory = (e) => {
+    setIdCategory(e.target.value)
   }
 
   useEffect(() => {
@@ -119,21 +166,30 @@ function FormProduct(props) {
 
     setTitle(titlePathname)
 
-    console.log(id)
-    console.log(location.pathname)
-
-    Axios.get(`http://localhost:2000/products/${id}`)
+    Axios.get(`${apiUrl}/product/${id}`)
       .then(response => {
-        const data = response.data
+        const data = response.data.data[0]
         setProd(data.productName)
         setDesc(data.description)
         setPrc(data.price)
         setStc(data.stock)
         setImageEdit(data.image)
+        setIdCategoryBase(data.idCategory)
       })
       .catch(err => {
         console.log(err)
       })
+
+    Axios.get(`${apiUrl}/category`)
+      .then(response => {
+        const data = response.data.data
+        setCategories(data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+
 
   }, [])
 
@@ -162,7 +218,7 @@ function FormProduct(props) {
             fontWeight={"bold"}
           >{title} Product</Text>
           <Text marginBottom="15px">Product Name</Text>
-          <Input defaultValue={title === "Edit" ? prod : ""} ref={productName} marginBottom="15px" type="text" />
+          <Input defaultValue={title === "Edit" ? prod : ""} ref={productName} marginBottom="15px" type="text" minLength={6} />
 
           <Text marginBottom="15px">Description</Text>
           <Textarea defaultValue={title === "Edit" ? desc : ""} height={"200px"} ref={description} marginBottom="25px" type="text" />
@@ -173,26 +229,47 @@ function FormProduct(props) {
           <Text marginBottom="15px">Stock</Text>
           <Input defaultValue={title === "Edit" ? stc : ""} ref={stock} marginBottom="25px" type="number" />
 
-          <Text marginBottom="15px">Product Image</Text>
+          <Text marginBottom="15px">Category</Text>
+          <Select defaultValue={0} marginBottom="15px" placeholder={title === "Edit" ? "ok" : 'Select option'} onChange={onChangeCategory}>
+            {
+              categories.map(category => {
+                return (
+                  <option
+                    value={category.id}
+                    selected=
+                    {
+                      idCategoryBase === category.id ? true : false
+                    }>
+                    {category.categoryName}
+                  </option>
+                )
+              })
+            }
+          </Select>
+
           {title === "Edit" ?
-            <Image objectFit={"cover"} boxSize={"100px"} mb={2}
-              src={imageEdit}
-              alt='Product Image'
-              borderRadius={8} />
+            <>
+              <Text marginBottom="15px">Product Image</Text>
+              <Image objectFit={"cover"} boxSize={"100px"} mb={2}
+                src={imageEdit}
+                alt='Product Image'
+                borderRadius={8} />
+              <Box>
+                <Input
+                  onChange={imageHandler}
+                  marginBottom="25px"
+                  type="file"
+                  accept="image/*" w={"50%"} />
+                <Button ml={2} disabled={loading} onClick={onUploadPicture}>Upload picture</Button>
+              </Box>
+            </>
             :
-            <Image objectFit={"cover"} boxSize={"100px"} mb={2}
-              src={imageBase}
-              alt='Product image'
-              borderRadius={8} />
+            // <Image objectFit={"cover"} boxSize={"100px"} mb={2}
+            //   src={imageBase}
+            //   alt='Product image'
+            //   borderRadius={8} />
+            null
           }
-          <Box>
-            <Input
-              onChange={imageHandler}
-              marginBottom="25px"
-              type="file"
-              accept="image/*" w={"50%"} />
-            <Button ml={2} disabled={loading} onClick="">Upload picture</Button>
-          </Box>
 
           <Button
             colorScheme='teal'

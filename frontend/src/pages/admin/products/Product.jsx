@@ -1,21 +1,31 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import Axios from "axios"
 import { Link as RouterLink } from "react-router-dom"
 import Header from './../../../component/Header';
 import Loading from "../../../component/subcomponent/Loading";
-import { Heading, useToast } from "@chakra-ui/react";
+import { Badge, Heading, useToast } from "@chakra-ui/react";
 import Crud from './../../../component/subcomponent/Crud';
 import Pagination from "../../../component/Pagination";
 import Footer from "../../../component/Footer";
 import ModalDelete from "../../../component/subcomponent/ModalDelete";
 
+const apiUrl = process.env.REACT_APP_API_URL
+
 function Product() {
 
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
+  const [category, setCategory] = useState(null)
+  const [search, setSearch] = useState("")
+  const [currentPage, setCurrentPage] = useState(null)
   const [id, setId] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [totalPage, setTotalPage] = useState(null)
+  const [sort, setSort] = useState(null)
+
+  const searcKey = useRef("")
+  const sortSelected = useRef(null)
 
   const toast = useToast()
 
@@ -32,11 +42,11 @@ function Product() {
 
   const onConfirmDelete = () => {
     setLoading(true)
-    Axios.delete(`http://localhost:2000/products/${id}`)
+    Axios.delete(`${apiUrl}/product/${id}`)
       .then(res => {
-        Axios.get(`http://localhost:2000/products`)
+        Axios.get(`${apiUrl}/product`)
           .then(res => {
-            setProducts(res.data)
+            setProducts(res.data.data)
             setLoading(false)
             setConfirmDelete(false)
             setId(null)
@@ -79,23 +89,66 @@ function Product() {
       })
   }
 
+  const onHandleSearch = () => {
+    setSearch(searcKey.current.value)
+  }
+
+  const onHandleCategory = (e) => {
+    console.log(e.target.value)
+    const selectCategory = e.target.value === "All" ? "" : e.target.value
+    setCategory(selectCategory)
+  }
+
+  const onHandlePageClick = (data) => {
+    setCurrentPage(data.selected + 1)
+  }
+
+  const onHandleSort = () => {
+    setSort(sortSelected.current.value)
+  }
+
   useEffect(() => {
     setLoading(true)
-    Axios.get("http://localhost:2000/products")
+    Axios.get(`${apiUrl}/product`, {
+      params: {
+        search: search,
+        filter: category,
+        sort: sort,
+        current_page: currentPage,
+        per_page: 4
+      }
+    })
       .then(response => {
         setLoading(false)
-        setProducts(response.data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+        setProducts(response.data.data)
 
-    Axios.get("http://localhost:2000/categories")
-      .then(response => {
-        setLoading(false)
-        setCategories(response.data)
+        const total = response.data.total_count.total
+        setTotalPage(Math.ceil(total / 4))
       })
       .catch(err => {
+        setLoading(false)
+        setProducts([])
+        setTotalPage(0)
+        console.log(err)
+
+        toast({
+          position: "top",
+          title: err?.response?.data?.data,
+          status: 'error',
+          duration: 3000,
+          isClosable: true
+        })
+      })
+  }, [search, category, currentPage, sort])
+
+  useEffect(() => {
+    Axios.get(`${apiUrl}/category`)
+      .then(response => {
+        setLoading(false)
+        setCategories(response.data.data)
+      })
+      .catch(err => {
+        setLoading(false)
         console.log(err)
       })
   }, [])
@@ -116,33 +169,33 @@ function Product() {
                 <div className="page-utilities">
                   <div className="row g-2 justify-content-start justify-content-md-end align-items-center">
                     <div className="col-auto">
-                      <form className="docs-search-form row gx-1 align-items-center">
+                      <div className="row gx-1 align-items-center">
                         <div className="col-auto">
-                          <input type="text" id="search-docs" name="searchdocs" className="form-control search-docs" placeholder="Search" />
+                          <input type="text" className="form-control" placeholder="Search" ref={searcKey} />
                         </div>
                         <div className="col-auto">
-                          <button type="submit" className="btn app-btn-secondary">Search</button>
+                          <button type="btn" className="btn app-btn-secondary" onClick={onHandleSearch}>Search</button>
                         </div>
-                      </form>
+                      </div>
 
                     </div>
                     <div className="col-auto">
-                      <select className="form-select w-auto">
-                        <option defaultValue="option-1">All</option>
+                      <select defaultValue={""} className="form-select w-auto" onChange={onHandleCategory}>
+                        <option value="" selected>All</option>
                         {
                           categories.map(category => {
                             return (
-                              <option defaultValue={category.id}>{category.category_name}</option>
+                              <option key={category.id} value={category.categoryName}>{category.categoryName}</option>
                             )
                           })
                         }
                       </select>
                     </div>
                     <div className="col-auto">
-                      <select className="form-select w-auto">
-                        <option defaultValue="option-1">Sort to higher price</option>
-                        <option defaultValue="option-2">Sort to lower price</option>
-                        <option defaultValue="option-3">Sort trend</option>
+                      <select defaultValue={""} className="form-select w-auto" ref={sortSelected} onChange={onHandleSort}>
+                        <option value="">No Sorting</option>
+                        <option value="asc">Sort low to higher price</option>
+                        <option value="desc">Sort high to lower price</option>
                       </select>
                     </div>
                     <div className="col-auto">
@@ -170,9 +223,10 @@ function Product() {
                         <div className="app-card-body p-3 has-card-actions">
                           <Heading as={"h2"} className="app-doc-title truncate mb-2">{product.productName}</Heading>
                           <div className="app-doc-meta">
-                            <ul className="list-unstyled mb-2">
+                            <ul key={product.id} className="list-unstyled mb-2">
                               <li className="mb-2"><span className="text-secondary">Rp. </span>{product.price}</li>
-                              <li><span className="text-secondary">Stock:</span> {product.stock}</li>
+                              <li><span className="text-secondary mb-2">Stock:</span> {product.stock}</li>
+                              <li className="my-2"><Badge variant='solid' colorScheme='purple'>{product.categoryName}</Badge></li>
                             </ul>
                           </div>
                           <div className="app-card-actions">
@@ -192,7 +246,11 @@ function Product() {
                 })
               }
             </div>
-            <Pagination />
+            {
+              totalPage ? <Pagination state={{ onHandlePageClick, totalPage }} />
+                :
+                null
+            }
           </div>
         </div>
         <Footer />

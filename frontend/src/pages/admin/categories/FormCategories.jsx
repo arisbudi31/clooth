@@ -3,6 +3,8 @@ import { Box, Button, Flex, Heading, Image, Input, Text, Textarea, useToast } fr
 import Axios from "axios"
 import { useNavigate } from 'react-router-dom';
 
+const apiUrl = process.env.REACT_APP_API_URL
+
 function FormCategories() {
   // const location = useLocation()
   const [loading, setLoading] = useState(false)
@@ -14,8 +16,8 @@ function FormCategories() {
   const onButtonAddCategories = () => {
     setLoading(true)
 
-    Axios.post("http://localhost:2000/categories", {
-      category_name: category_name.current.value,
+    Axios.post(apiUrl + "/category", {
+      categoryName: category_name.current.value,
       slug: slug.current.value
     })
       .then(response => {
@@ -38,8 +40,8 @@ function FormCategories() {
 
         toast({
           position: "top",
-          title: 'Something wrong',
-          status: 'danger',
+          title: err.response.data.data,
+          status: 'error',
           duration: 3000,
           isClosable: true
         })
