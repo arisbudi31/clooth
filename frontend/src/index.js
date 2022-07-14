@@ -13,8 +13,8 @@ import adminReducer from './redux/reducers/admin-reducers';
 import loadingReducer from './redux/reducers/loading-reducer';
 
 const Reducer = combineReducers({
-  admin : adminReducer,
-  loading : loadingReducer
+  admin: adminReducer,
+  loading: loadingReducer
 })
 
 //create global store

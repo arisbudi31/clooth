@@ -44,6 +44,40 @@ module.exports.getCategory = async (req, res) => {
   }
 }
 
+module.exports.getTotalCategory = async (req, res) => {
+
+  try {
+
+    const GET_CATEGORY = `SELECT * FROM categories;`
+
+    const [categories] = await db.execute(GET_CATEGORY)
+
+    if (!categories.length) {
+      const responseStatus = new createResponse(
+        httpStatus.BAD_REQUEST,
+        'Error', false, 1, 1, 'Kategori tidak ditemukan'
+      )
+
+      res.status(responseStatus.status).send(responseStatus)
+      throw new createError(httpStatus.BAD_REQUEST, 'kategori tidak ditemukan')
+    }
+
+    const TOTAL_CATEGORY = `SELECT COUNT (*) as total_category FROM categories;`
+
+    const [totalCategory] = await db.execute(TOTAL_CATEGORY)
+
+    const responseStatus = new createResponse(
+      httpStatus.OK,
+      'success', true, totalCategory[0], 1, categories
+    )
+
+    res.status(responseStatus.status).send(responseStatus)
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports.editCategory = async (req, res) => {
 
   const idCategory = req.params.id

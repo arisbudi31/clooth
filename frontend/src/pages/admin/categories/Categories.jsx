@@ -20,7 +20,7 @@ function Categories() {
   const [edit, setEdit] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [totalPage, setTotalPage] = useState(null)
-  const [currentPage, setCurrentPage] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
   const [catSearch, setCatSearch] = useState(null)
   const [num, setNum] = useState(0)
 
