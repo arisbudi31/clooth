@@ -180,7 +180,7 @@ function FormProduct(props) {
         console.log(err)
       })
 
-    Axios.get(`${apiUrl}/category`)
+    Axios.get(`${apiUrl}/all-category`)
       .then(response => {
         const data = response.data.data
         setCategories(data)

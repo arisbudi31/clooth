@@ -1,7 +1,7 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import Sidebar from "./Sidebar";
 import { useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 
 function Header() {
   const navigate = useNavigate()
@@ -15,7 +15,7 @@ function Header() {
   }
 
   const admin = useSelector((state) => state.admin)
-  console.log(`data admin:`, admin);
+  // console.log(`data admin:`, admin);
 
   // useEffect(() => {
 

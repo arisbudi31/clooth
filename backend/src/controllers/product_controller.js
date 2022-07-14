@@ -9,7 +9,7 @@ const dir = "./public/products"
 
 module.exports.getProduct = async (req, res) => {
 
-  const per_page = Number(req.query.per_page) || 4
+  const per_page = Number(req.query.per_page) || 6
   const current_page = Number(req.query.current_page) || 1
   const search = req.query.search || ""
   const filter = req.query.filter || ""

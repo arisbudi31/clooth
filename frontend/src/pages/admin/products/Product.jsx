@@ -142,7 +142,7 @@ function Product() {
   }, [search, category, currentPage, sort])
 
   useEffect(() => {
-    Axios.get(`${apiUrl}/category`)
+    Axios.get(`${apiUrl}/all-category`)
       .then(response => {
         setLoading(false)
         setCategories(response.data.data)
