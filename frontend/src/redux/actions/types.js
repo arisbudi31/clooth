@@ -1,6 +1,6 @@
 //users
 export const GET_USER_DATA = 'GET_USER_DATA'
-export const DELETE_USER_DATA ='DELETE_USER_DATA'
+export const GET_ERROR_USER ='GET_ERROR_USER'
 
 //admin
 export const GET_ADMIN_DATA = 'GET_ADMIN_DATA'
@@ -17,3 +17,19 @@ export const DELETE_PRODUCT = 'DELETE_PRODUCT'
 //loading
 export const LOADING_START = 'LOADING_START'
 export const LOADING_END = 'LOADING_END'
+
+//cart
+export const GET_CARTS = 'GET_CARTS'
+export const GET_ERROR_CARTS = 'GET_ERROR_CARTS'
+
+//order
+export const GET_ORDERS = 'GET_ORDERS'
+export const GET_ERROR_ORDERS = 'GET_ERROR_ORDERS'
+
+//report
+export const GET_REPORT = 'GET_REPORT'
+export const GET_ERROR_REPORT = 'GET_ERROR_REPORT'
+
+//access
+export const GET_ACCESS = 'GET_ACCESS'
+export const DROP_ACCESS = 'DROP_ACCESS' 

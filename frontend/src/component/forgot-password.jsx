@@ -10,7 +10,7 @@ import {
   useToast
 } from "@chakra-ui/react";
 
-const API_URL = process.env.REACT_APP_API_URL
+const API_URL = process.env.REACT_API_URL
 
 export default function ForgotPassword({onButtonClose}) {
     const toast = useToast()
@@ -22,7 +22,7 @@ export default function ForgotPassword({onButtonClose}) {
         }
         console.log(`body:`, bodyOnReset);
   
-        await axios.post('http://localhost:2000/api/admin/forgot-password', bodyOnReset)
+        await axios.post(API_URL + '/api/admin/forgot-password', bodyOnReset)
         .then((resp) => {
           console.log(`respond after req:`, resp);
           toast({

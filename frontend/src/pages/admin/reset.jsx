@@ -1,6 +1,8 @@
 import React, {useRef} from "react";
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux/es/exports";
 import {
     Flex,
     Box,
@@ -13,23 +15,24 @@ import {
     Spinner,
     useToast
   } from "@chakra-ui/react";
-  import {FiSend} from 'react-icons/fi'
-import axios from "axios";
+import {FiSend} from 'react-icons/fi'
+import { LOADING_END, LOADING_START } from "../../redux/actions/types";
+import Loading from "../../component/subcomponent/Loading";
 
-const API_URL = process.env.REACT_APP_API_URL
 export default function ResetPassword () {
+    const API_URL = process.env.REACT_APP_API_URL
     const [show, setShow] = useState(false)
     const [sending, setSending] = useState(false)
     const showPassword = () => setShow(!show)
     const navigate = useNavigate()
-    // const dispatch = useDispatch()
+    const dispatch = useDispatch()
+    const {loading} = useSelector(state => state.loading)
     const toast = useToast()
     const passwordOnReset = useRef('')
     const repasswordOnReset = useRef('')
     const pathname = window.location.pathname;
     const adminname = pathname.split('/reset/')[1]
     const emailAdmin = pathname.split('/reset/')[2]
-    console.log(`userId:`, adminname);
 
     const onResetButton = async() => {
         setSending(true)
@@ -38,11 +41,12 @@ export default function ResetPassword () {
             password: passwordOnReset.current.value,
             repassword: repasswordOnReset.current.value
         }
-
-        await axios.patch(`http://localhost:5000/api/admin/reset-password/${adminname}`, bodyOnReset)
+        dispatch({type: LOADING_START})
+        await axios.patch(API_URL + `/api/admin/reset-password/${adminname}`, bodyOnReset)
         .then((resp) => {
             setSending(false)
             console.log(`resp:`, resp);
+            dispatch({type: LOADING_END})
             toast({
                 title: "Request Success",
                 description: resp.data,
@@ -55,6 +59,7 @@ export default function ResetPassword () {
         .catch((err) => {
             console.log(`error:`, err);
             setSending(false)
+            dispatch({type: LOADING_END})
             if(err){
                 return toast({
                     title: `Error`,
@@ -69,6 +74,7 @@ export default function ResetPassword () {
     }
     return (
         <Flex bgColor={"#f1f2f6"} fontFamily="Ubuntu" mt="-55px">
+            <Loading state={{ loading }} />
             <Box w="90vw" h="100vh" p="5% 25%" >
                 <Box
                     border={"4px solid #1e3799"}
@@ -100,7 +106,7 @@ export default function ResetPassword () {
                                 borderColor="blue.700"
                                 color="gray.500"
                                 disabled="true"
-                            >veronica.admgroup03@yahoo.com</Text>
+                            >{emailAdmin}</Text>
                     </Box>
                     <Box mt="7%">
                     <FormLabel>Password</FormLabel>

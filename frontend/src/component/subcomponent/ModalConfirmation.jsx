@@ -14,30 +14,30 @@ import {
 
 } from "@chakra-ui/react"
 
-function ModalDelete(props) {
+export default function Confirmation(props) {
 
   return (
     <>
       <Modal
-        isOpen={props.state.confirmDelete}
+        isOpen={props.state.confirm}
       >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader fontSize="lg" fontWeight="bold">
-            Delete Confirmation
+            Action Confirmation
           </ModalHeader>
-          <ModalCloseButton onClick={props.state.onBtnCancel} />
+          <ModalCloseButton onClick={props.state.onBtnClose} />
 
           <ModalBody>
-            Are you sure to delete it? You can't undo this action afterwards.
+            Are you sure to do this?
           </ModalBody>
 
           <ModalFooter>
-            <Button onClick={props.state.onBtnCancel}>
-              Cancel
+            <Button onClick={props.state.onBtnNo} colorScheme={"red"} color="white" ml={3}>
+              No
             </Button>
-            <Button onClick={props.state.onConfirmDelete} colorScheme={"red"} color="white" ml={3}>
-              Delete
+            <Button onClick={props.state.onBtnYes} colorScheme={"green"} color="white" ml={3}>
+              Yes
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -46,4 +46,3 @@ function ModalDelete(props) {
   )
 }
 
-export default ModalDelete

@@ -1,21 +1,31 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { useNavigate } from "react-router-dom";
 import {Box} from '@chakra-ui/react'
+import { useSelector, useDispatch } from "react-redux";
 
 import Header from "../../component/Header";
 import Loading from "../../component/subcomponent/Loading";
+import { LOADING_END } from "../../redux/actions/types";
 
 export default function HomeAdmin() {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    // const {role} = useSelector(state => state.access)
+    const role = localStorage.getItem("akses")
     const token = localStorage.getItem("tokenAdmin")
     const keepLogin = localStorage.getItem("keepLogin")
-    const [loading, setLoading] = useState(false)
-    console.log(`token:`, token);
-    console.log('keepLogin:', keepLogin);
+    const {loading} = useSelector(state => state.loading)
+    console.log(`loading at admin home:`, loading);
+    console.log(`role:`,role);
+
+    if(role !== 'BearerAdmin' || role === null){
+        return (navigate('/user/login'))
+    }
+
     if(keepLogin === 'false'){
-        setTimeout(() => navigate('/admin/login'), 10000)
-        setTimeout(() => localStorage.removeItem("tokenAdmin"), 10000)
-        
+        setTimeout(() => navigate('/admin/login'), '1d')
+        setTimeout(() => localStorage.removeItem("tokenAdmin"), '1d')
+        dispatch({type: LOADING_END})
     }
     else if(token === null){
         setTimeout(() => navigate('/admin/login'), 5000)

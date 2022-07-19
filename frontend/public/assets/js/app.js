@@ -20,6 +20,7 @@ const sidePanel = document.getElementById('app-sidepanel');
 const sidePanelDrop = document.getElementById('sidepanel-drop');
 const sidePanelClose = document.getElementById('sidepanel-close');
 
+<<<<<<< Updated upstream
 window.addEventListener('load', function () {
   responsiveSidePanel();
 });
@@ -27,6 +28,15 @@ window.addEventListener('load', function () {
 window.addEventListener('resize', function () {
   responsiveSidePanel();
 });
+=======
+// window.addEventListener('load', function(){
+// 	responsiveSidePanel(); 
+// });
+
+// window.addEventListener('resize', function(){
+// 	responsiveSidePanel(); 
+// });
+>>>>>>> Stashed changes
 
 
 function responsiveSidePanel() {
@@ -45,6 +55,7 @@ function responsiveSidePanel() {
   }
 };
 
+<<<<<<< Updated upstream
 sidePanelToggler.addEventListener('click', () => {
   if (sidePanel.classList.contains('sidepanel-visible')) {
     console.log('visible');
@@ -68,15 +79,41 @@ sidePanelClose.addEventListener('click', (e) => {
 sidePanelDrop.addEventListener('click', (e) => {
   sidePanelToggler.click();
 });
+=======
+// sidePanelToggler.addEventListener('click', () => {
+// 	if (sidePanel.classList.contains('sidepanel-visible')) {
+// 		console.log('visible');
+// 		sidePanel.classList.remove('sidepanel-visible');
+// 		sidePanel.classList.add('sidepanel-hidden');
+		
+// 	} else {
+// 		console.log('hidden');
+// 		sidePanel.classList.remove('sidepanel-hidden');
+// 		sidePanel.classList.add('sidepanel-visible');
+// 	}
+// });
+
+
+
+// sidePanelClose.addEventListener('click', (e) => {
+// 	e.preventDefault();
+// 	sidePanelToggler.click();
+// });
+
+// sidePanelDrop.addEventListener('click', (e) => {
+// 	sidePanelToggler.click();
+// });
+>>>>>>> Stashed changes
 
 
 
 /* ====== Mobile search ======= */
-const searchMobileTrigger = document.querySelector('.search-mobile-trigger');
-const searchBox = document.querySelector('.app-search-box');
+// const searchMobileTrigger = document.querySelector('.search-mobile-trigger');
+// const searchBox = document.querySelector('.app-search-box');
 
-searchMobileTrigger.addEventListener('click', () => {
+// searchMobileTrigger.addEventListener('click', () => {
 
+<<<<<<< Updated upstream
   searchBox.classList.toggle('is-visible');
 
   let searchMobileTriggerIcon = document.querySelector('.search-mobile-trigger-icon');
@@ -92,5 +129,22 @@ searchMobileTrigger.addEventListener('click', () => {
 
 
 });
+=======
+// 	searchBox.classList.toggle('is-visible');
+	
+// 	let searchMobileTriggerIcon = document.querySelector('.search-mobile-trigger-icon');
+	
+// 	if(searchMobileTriggerIcon.classList.contains('fa-search')) {
+// 		searchMobileTriggerIcon.classList.remove('fa-search');
+// 		searchMobileTriggerIcon.classList.add('fa-times');
+// 	} else {
+// 		searchMobileTriggerIcon.classList.remove('fa-times');
+// 		searchMobileTriggerIcon.classList.add('fa-search');
+// 	}
+	
+		
+	
+// });
+>>>>>>> Stashed changes
 
 
