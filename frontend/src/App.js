@@ -60,7 +60,6 @@ function App() {
         <Route path="/admin/add-category/" element={<FormCategories />} />
       </Routes>
     </div>
-
   );
 }
 

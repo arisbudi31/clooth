@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import Axios from "axios"
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router"
 import { Heading, Badge } from "@chakra-ui/react"
 import Header from "../../../component/Header"
@@ -16,8 +17,13 @@ function DetailProduct() {
   const [stock, setStock] = useState("")
   const [image, setImage] = useState("")
   const [category, setCategory] = useState("")
+  const navigate = useNavigate()
+  const role = localStorage.getItem("akses")
 
   useEffect(() => {
+    if(role !== 'BearerAdmin' || role === null){
+      return (navigate('/user/login'))
+    }
 
     Axios.get(`${apiUrl}/product/${id}`)
       .then(response => {

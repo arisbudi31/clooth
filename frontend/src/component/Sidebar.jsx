@@ -9,11 +9,7 @@ function Sidebar() {
       <div className="sidepanel-inner d-flex flex-column">
         <a href="#" id="sidepanel-close" className="sidepanel-close d-xl-none">&times;</a>
         <div className="app-branding">
-<<<<<<< Updated upstream
-          <RouterLink to={"/admin/product"} className="app-logo d-flex align-items-center">
-=======
           <RouterLink to={"/admin"} className="app-logo d-flex align-items-center">
->>>>>>> Stashed changes
             <img className="logo-icon me-2" src={logo} alt="logo" />
             <span className="logo-text">CLOOTH</span>
           </RouterLink>

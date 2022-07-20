@@ -29,6 +29,7 @@ function FormProduct(props) {
   const location = useLocation()
   const navigate = useNavigate()
   const toast = useToast()
+  const role = localStorage.getItem("akses")
 
   const imageHandler = (e) => {
 
@@ -163,6 +164,10 @@ function FormProduct(props) {
 
   useEffect(() => {
     const titlePathname = location.pathname.includes("edit") ? "Edit" : "Add"
+
+    if(role !== 'BearerAdmin' || role === null){
+      return (navigate('/user/login'))
+    }
 
     setTitle(titlePathname)
 
