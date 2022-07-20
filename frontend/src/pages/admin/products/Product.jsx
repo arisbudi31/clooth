@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import Axios from "axios"
-import { Link as RouterLink } from "react-router-dom"
+import { Link as RouterLink, useNavigate } from "react-router-dom"
 import Header from './../../../component/Header';
 import Loading from "../../../component/subcomponent/Loading";
 import { Badge, Heading, useToast } from "@chakra-ui/react";
@@ -23,6 +23,8 @@ function Product() {
   const [loading, setLoading] = useState(false)
   const [totalPage, setTotalPage] = useState(null)
   const [sort, setSort] = useState(null)
+  const navigate = useNavigate()
+  const role = localStorage.getItem("akses")
 
   const searcKey = useRef("")
   const sortSelected = useRef(null)
@@ -108,6 +110,10 @@ function Product() {
   }
 
   useEffect(() => {
+    if(role !== 'BearerAdmin' || role === null){
+      return (navigate('/user/login'))
+    }
+
     setLoading(true)
     Axios.get(`${apiUrl}/product`, {
       params: {

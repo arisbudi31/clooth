@@ -20,15 +20,6 @@ const sidePanel = document.getElementById('app-sidepanel');
 const sidePanelDrop = document.getElementById('sidepanel-drop');
 const sidePanelClose = document.getElementById('sidepanel-close');
 
-<<<<<<< Updated upstream
-window.addEventListener('load', function () {
-  responsiveSidePanel();
-});
-
-window.addEventListener('resize', function () {
-  responsiveSidePanel();
-});
-=======
 // window.addEventListener('load', function(){
 // 	responsiveSidePanel(); 
 // });
@@ -36,7 +27,6 @@ window.addEventListener('resize', function () {
 // window.addEventListener('resize', function(){
 // 	responsiveSidePanel(); 
 // });
->>>>>>> Stashed changes
 
 
 function responsiveSidePanel() {
@@ -55,31 +45,6 @@ function responsiveSidePanel() {
   }
 };
 
-<<<<<<< Updated upstream
-sidePanelToggler.addEventListener('click', () => {
-  if (sidePanel.classList.contains('sidepanel-visible')) {
-    console.log('visible');
-    sidePanel.classList.remove('sidepanel-visible');
-    sidePanel.classList.add('sidepanel-hidden');
-
-  } else {
-    console.log('hidden');
-    sidePanel.classList.remove('sidepanel-hidden');
-    sidePanel.classList.add('sidepanel-visible');
-  }
-});
-
-
-
-sidePanelClose.addEventListener('click', (e) => {
-  e.preventDefault();
-  sidePanelToggler.click();
-});
-
-sidePanelDrop.addEventListener('click', (e) => {
-  sidePanelToggler.click();
-});
-=======
 // sidePanelToggler.addEventListener('click', () => {
 // 	if (sidePanel.classList.contains('sidepanel-visible')) {
 // 		console.log('visible');
@@ -103,7 +68,6 @@ sidePanelDrop.addEventListener('click', (e) => {
 // sidePanelDrop.addEventListener('click', (e) => {
 // 	sidePanelToggler.click();
 // });
->>>>>>> Stashed changes
 
 
 
@@ -113,23 +77,6 @@ sidePanelDrop.addEventListener('click', (e) => {
 
 // searchMobileTrigger.addEventListener('click', () => {
 
-<<<<<<< Updated upstream
-  searchBox.classList.toggle('is-visible');
-
-  let searchMobileTriggerIcon = document.querySelector('.search-mobile-trigger-icon');
-
-  if (searchMobileTriggerIcon.classList.contains('fa-search')) {
-    searchMobileTriggerIcon.classList.remove('fa-search');
-    searchMobileTriggerIcon.classList.add('fa-times');
-  } else {
-    searchMobileTriggerIcon.classList.remove('fa-times');
-    searchMobileTriggerIcon.classList.add('fa-search');
-  }
-
-
-
-});
-=======
 // 	searchBox.classList.toggle('is-visible');
 	
 // 	let searchMobileTriggerIcon = document.querySelector('.search-mobile-trigger-icon');
@@ -145,6 +92,5 @@ sidePanelDrop.addEventListener('click', (e) => {
 		
 	
 // });
->>>>>>> Stashed changes
 
 

@@ -17,16 +17,11 @@ import cartReducer from './redux/reducers/cart-reducers';
 import orderReducer from './redux/reducers/order-reducers';
 
 const Reducer = combineReducers({
-<<<<<<< Updated upstream
-  admin: adminReducer,
-  loading: loadingReducer
-=======
   admin : adminReducer,
   loading : loadingReducer,
   users: userReducer,
   cart: cartReducer,
   order: orderReducer,
->>>>>>> Stashed changes
 })
 
 //create global store

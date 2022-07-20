@@ -23,8 +23,8 @@ export default function HomeAdmin() {
     }
 
     if(keepLogin === 'false'){
-        setTimeout(() => navigate('/admin/login'), '1d')
-        setTimeout(() => localStorage.removeItem("tokenAdmin"), '1d')
+        setTimeout(() => navigate('/admin/login'), 10000)
+        setTimeout(() => localStorage.removeItem("tokenAdmin"), 10000)
         dispatch({type: LOADING_END})
     }
     else if(token === null){
@@ -44,9 +44,8 @@ export default function HomeAdmin() {
                 <div className="app-wrapper">
                     <div className="app-content pt-3 p-md-3 p-lg-4">
                         <div className="container-xl">
-                    <h1 >Dashboard</h1>
+                    <text className="pagetitle h1">Dashboard</text>
                             <div className="row g-4 mb-4">
-
                                 <div className="col-6 col-lg-3">
                                     <div className="app-card app-card-stat shadow-sm h-100">
                                         <div className="app-card-body p-3 p-lg-4">

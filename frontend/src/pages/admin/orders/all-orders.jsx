@@ -22,7 +22,6 @@ import { ChevronLeftIcon, ChevronRightIcon, TriangleDownIcon} from '@chakra-ui/i
 
 import Header from '../../../component/Header'
 import Loading from '../../../component/subcomponent/Loading'
-import Confirmation from '../../../component/subcomponent/ModalConfirmation'
 
 import {getAllOrders, sortAllOrders} from '../../../redux/actions/admin-actions'
 

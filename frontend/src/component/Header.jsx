@@ -14,10 +14,6 @@ function Header() {
   }
 
   const admin = useSelector((state) => state.admin)
-<<<<<<< Updated upstream
-  // console.log(`data admin:`, admin);
-=======
->>>>>>> Stashed changes
 
   return (
     <>
