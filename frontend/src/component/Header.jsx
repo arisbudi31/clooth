@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Sidebar from "./Sidebar";
-import {Text} from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from "react-redux";
 
