@@ -1,7 +1,7 @@
 import * as React from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {useDispatch, useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Loading from "../../component/subcomponent/Loading";
 import { LOADING_END, LOADING_START, GET_ACCESS } from "../../redux/actions/types";
 import {
@@ -23,37 +23,37 @@ import bgLogin from '../../assets/images/bgLogin.jpg'
 import logo from '../../assets/images/clooth-logo.png'
 
 //components
-import ForgotPassword from "../../component/Forgot-password";
+import ForgotPassword from "../../component/forgot-password";
 
 export default function Login() {
   const API_URL = process.env.REACT_APP_API_URL
   const [forgotOpen, setForgotOpen] = React.useState(false);
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const {loading} = useSelector(state => state.loading)
+  const { loading } = useSelector(state => state.loading)
   const toast = useToast()
-  
+
   const [values, setValues] = React.useState({
     password: '',
     email: '',
     showPassword: false
   });
-  
+
   const handleChange = (prop) => (event) => {
-      setValues({ ...values, [prop]: event.target.value });
+    setValues({ ...values, [prop]: event.target.value });
   };
-  
+
   const handleClick = () => {
-      setValues({
-          ...values,
+    setValues({
+      ...values,
       showPassword: !values.showPassword,
-      });
+    });
   };
 
   const keep = document.getElementsByName("keep")
 
   const onButtonSignIn = async () => {
-    dispatch({type: LOADING_START})
+    dispatch({ type: LOADING_START })
     const bodyOnSignIn = {
       adminname: values.email,
       password: values.password
@@ -61,45 +61,45 @@ export default function Login() {
     console.log(`body:`, bodyOnSignIn)
 
     await Axios.post(API_URL + '/admin/login', bodyOnSignIn)
-    .then((resp) => {
-      const arr = resp.headers["authtoken"].split(" ")
-      const token = arr[1]
-      const role = arr[0]
-      console.log();
-      
-      localStorage.setItem("tokenAdmin", token)
-      localStorage.setItem("akses", role)
-      if(!keep[0].checked){
-        localStorage.setItem("keepLogin", 'false')
-      } else {
-        localStorage.setItem("keepLogin", 'true')
-      }
+      .then((resp) => {
+        const arr = resp.headers["authtoken"].split(" ")
+        const token = arr[1]
+        const role = arr[0]
+        console.log();
 
-      dispatch({type: GET_ACCESS, payload: {role: role}})
-      dispatch({type: LOADING_END})
-      toast({
-        title: "Login Success",
-        description: "Login Success",
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      })
+        localStorage.setItem("tokenAdmin", token)
+        localStorage.setItem("akses", role)
+        if (!keep[0].checked) {
+          localStorage.setItem("keepLogin", 'false')
+        } else {
+          localStorage.setItem("keepLogin", 'true')
+        }
 
-      navigate('/admin')
-    })
-    .catch ((err) => {
-      dispatch({type: LOADING_END})
-      console.log(`error login:`, err);
-      if(err){
-        return toast({
-          title: `Error`,
-          description: err.response.data, 
-          status: 'error',
-          duration: 5000,
+        dispatch({ type: GET_ACCESS, payload: { role: role } })
+        dispatch({ type: LOADING_END })
+        toast({
+          title: "Login Success",
+          description: "Login Success",
+          status: 'success',
+          duration: 3000,
           isClosable: true,
         })
-      }
-    })
+
+        navigate('/admin')
+      })
+      .catch((err) => {
+        dispatch({ type: LOADING_END })
+        console.log(`error login:`, err);
+        if (err) {
+          return toast({
+            title: `Error`,
+            description: err.response.data,
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          })
+        }
+      })
   };
 
   const onForgotButton = () => {
@@ -110,90 +110,90 @@ export default function Login() {
     setForgotOpen(false)
   }
 
-  return(
+  return (
     <Box display={"flex"} mt="-8">
       <Loading state={{ loading }} />
       <Box height={"100vh"} width={"74%"} ml="-40px">
-        <img src={bgLogin} alt={"background"}/>
+        <img src={bgLogin} alt={"background"} />
       </Box>
       <Box height={"100%"} width={"30%"} position={"static"} ml="-25px">
         <Box display={"flex"} alignItems={"center"} >
           <Avatar width="100px" height="100px" src={logo}></Avatar>
           <Heading fontSize={"60px"} fontFamily="initial" >CLOOTH</Heading>
         </Box>
-          <Box
-            m="20px 0px 10px 0px"
-            display='flex'
-            flexDirection={"column"}
-            alignItems={"center"}
-            border={"2px solid darkblue"}
-            borderRadius="10px"
-          >
-            <Text 
-                m="10px 0px 15px 0px" 
-                fontSize={"30px"} 
-                fontFamily={"sans-serif"} 
-                fontWeight={"bold"}
-                textColor={"yellow.500"}
-            >ADMIN LOG IN
-            </Text>
-            <Box p="10px">
+        <Box
+          m="20px 0px 10px 0px"
+          display='flex'
+          flexDirection={"column"}
+          alignItems={"center"}
+          border={"2px solid darkblue"}
+          borderRadius="10px"
+        >
+          <Text
+            m="10px 0px 15px 0px"
+            fontSize={"30px"}
+            fontFamily={"sans-serif"}
+            fontWeight={"bold"}
+            textColor={"yellow.500"}
+          >ADMIN LOG IN
+          </Text>
+          <Box p="10px">
+            <Input
+              label="Email"
+              type="email"
+              mb="10px"
+              border={"1.5px solid"}
+              borderColor="blackAlpha.400"
+              placeholder="Username or email"
+              onChange={handleChange('email')}
+            />
+            <InputGroup size='md'>
               <Input
-                label="Email"
-                type="email"
+                pr='4.5rem'
+                type={values.showPassword ? 'text' : 'password'}
+                placeholder='Password'
                 mb="10px"
                 border={"1.5px solid"}
-                borderColor="blackAlpha.400"            
-                placeholder="Username or email"
-                onChange={handleChange('email')}
+                borderColor="blackAlpha.400"
+                onChange={handleChange('password')}
               />
-              <InputGroup size='md'>
-                <Input
-                  pr='4.5rem'
-                  type={values.showPassword? 'text' : 'password'}
-                  placeholder='Password'
-                  mb="10px"
-                  border={"1.5px solid"}
-                  borderColor="blackAlpha.400" 
-                  onChange={handleChange('password')}
-                />
-                <InputRightElement width='4.5rem'>
-                  <Button h='1.75rem' size='sm' onClick={handleClick} variant="text">
-                    {values.showPassword ? 'Hide' : 'Show'}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
-              <Checkbox type={"checkbox"} size='md' colorScheme={"facebook"} w="100%" name="keep">
-                Keep me Log In
-              </Checkbox>
-              <Button
-                mt="20px"
-                onClick={onButtonSignIn}
-                width="100%"
-                color={"white"}
-                bgColor={"blue.600"}
-                colorScheme={"facebook"}
-              >Log In
-              </Button>
-              <Button onClick={onForgotButton} variant="link" color={"blue.600"}>
-                Forgot password?
-              </Button>
-            </Box>
-          </Box>
-          <ScaleFade direction="right" in={forgotOpen} >
-            <Box 
-              height={"140px"} 
-              padding={"5px"}
+              <InputRightElement width='4.5rem'>
+                <Button h='1.75rem' size='sm' onClick={handleClick} variant="text">
+                  {values.showPassword ? 'Hide' : 'Show'}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+            <Checkbox type={"checkbox"} size='md' colorScheme={"facebook"} w="100%" name="keep">
+              Keep me Log In
+            </Checkbox>
+            <Button
+              mt="20px"
+              onClick={onButtonSignIn}
               width="100%"
-              border={"2px solid darkblue"}
-              borderRadius="10px"
-              paddingBottom={"5px"}
-              bgColor={"white"}
-              boxSizing="border-box"
-            >
-              <ForgotPassword onButtonClose={() => forgotCloseButton()}/>
-            </Box>
-          </ScaleFade>
+              color={"white"}
+              bgColor={"blue.600"}
+              colorScheme={"facebook"}
+            >Log In
+            </Button>
+            <Button onClick={onForgotButton} variant="link" color={"blue.600"}>
+              Forgot password?
+            </Button>
+          </Box>
+        </Box>
+        <ScaleFade direction="right" in={forgotOpen} >
+          <Box
+            height={"140px"}
+            padding={"5px"}
+            width="100%"
+            border={"2px solid darkblue"}
+            borderRadius="10px"
+            paddingBottom={"5px"}
+            bgColor={"white"}
+            boxSizing="border-box"
+          >
+            <ForgotPassword onButtonClose={() => forgotCloseButton()} />
+          </Box>
+        </ScaleFade>
       </Box>
     </Box>
   )

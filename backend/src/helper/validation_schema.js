@@ -12,3 +12,10 @@ module.exports.categorySchema = joi.object({
   categoryName: joi.string().min(3).max(45).required(),
   slug: joi.string().min(3).max(45).required(),
 })
+
+module.exports.stockopnameSchema = joi.object({
+  id_product: joi.number().integer().required(),
+  qty: joi.number().min(1).required(),
+  status: joi.string().required(),
+  initStock: joi.number().min(1).required()
+})
