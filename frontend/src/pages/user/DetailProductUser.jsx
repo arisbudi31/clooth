@@ -3,17 +3,53 @@ import Axios from "axios"
 import { useParams } from "react-router"
 import Footer from "./component/Footer";
 import Header from "./component/Header";
+import NumberFormat from 'react-number-format';
+import { UPDATE_CARTS } from "../../redux/actions/types";
+import { useDispatch } from 'react-redux/es/exports';
+import { useToast } from '@chakra-ui/react';
+
 
 const apiUrl = process.env.REACT_APP_API_URL
 
 function DetailProductUser() {
+  const dispatch = useDispatch()
+  const toast = useToast()
   const { id } = useParams()
   const [product, setProduct] = useState("")
   const [description, setDescription] = useState("")
   const [price, setPrice] = useState("")
   const [stock, setStock] = useState("")
   const [image, setImage] = useState("")
-  const [category, setCategory] = useState("")
+
+  const onHandleAddtoCart = (id) => {
+    Axios.post(`${apiUrl}/carts`, {
+      id_product: id
+    })
+      .then(response => {
+        const totalCart = response.data
+
+        dispatch({ type: UPDATE_CARTS, payload: { count: totalCart?.total_count?.total_cart } })
+
+        toast({
+          position: "top",
+          title: totalCart?.data,
+          status: 'success',
+          duration: 3000,
+          isClosable: true
+        })
+
+      })
+      .catch(err => {
+
+        toast({
+          position: "top",
+          title: err?.response?.data?.data,
+          status: 'error',
+          duration: 3000,
+          isClosable: true
+        })
+      })
+  }
 
   useEffect(() => {
 
@@ -25,7 +61,6 @@ function DetailProductUser() {
         setPrice(data.price)
         setStock(data.stock)
         setImage(data.image)
-        setCategory(data.categoryName)
       })
       .catch(err => {
         console.log(err)
@@ -47,28 +82,24 @@ function DetailProductUser() {
             <div className="col-lg-4">
               <div className="right-content">
                 <h4>{product}</h4>
-                <span className="price">Rp. {price}</span>
+                <span className="price"><NumberFormat
+                  value={price}
+                  displayType={'text'}
+                  thousandSeparator={true}
+                  prefix={'Rp. '}
+                  renderText={value => <span>{value}</span>}
+                /></span>
                 <span>{description}.
                 </span>
                 <div className="quote">
                   <p style={{ fontSize: 20 }}>Stock: {stock}</p>
                 </div>
-                <div className="quantity-content">
-                  <div className="left-content">
-                    <h6>No. of Orders</h6>
-                  </div>
-                  <div className="right-content">
-                    <div className="quantity buttons_added">
-                      <input type="button" value="-" className="minus" />
-                      <input type="number" step="1" min="1" max=""
-                        name="quantity" value="1" title="Qty" className="input-text qty text" size="4" pattern=""
-                        inputmode="" />
-                      <input type="button" value="+" className="plus" />
-                    </div>
-                  </div>
-                </div>
                 <div className="total">
-                  <div className="main-border-button"><a href="#">Add To Cart</a></div>
+                  <div className="main-border-button">
+                    <button className="btn btn-info" onClick={() => onHandleAddtoCart(id)}>
+                      Add To Cart
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

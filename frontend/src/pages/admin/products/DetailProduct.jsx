@@ -5,6 +5,7 @@ import { useParams } from "react-router"
 import { Heading, Badge } from "@chakra-ui/react"
 import Header from "../../../component/Header"
 import Footer from "../../../component/Footer"
+import NumberFormat from 'react-number-format';
 
 const apiUrl = process.env.REACT_APP_API_URL
 
@@ -21,7 +22,7 @@ function DetailProduct() {
   const role = localStorage.getItem("akses")
 
   useEffect(() => {
-    if(role !== 'BearerAdmin' || role === null){
+    if (role !== 'BearerAdmin' || role === null) {
       return (navigate('/user/login'))
     }
 
@@ -64,7 +65,13 @@ function DetailProduct() {
                       </div>
                       <div className="col-7 col-md-7 d-flex flex-column">
                         <Heading as={"h4"} size="md" className="mb-3">{product}</Heading>
-                        <Heading as={"h5"} size="sm" className="mb-3">Rp. {price}</Heading>
+                        <Heading as={"h5"} size="sm" className="mb-3"><NumberFormat
+                          value={price}
+                          displayType={'text'}
+                          thousandSeparator={true}
+                          prefix={'Rp. '}
+                          renderText={value => <span>{value}</span>}
+                        /></Heading>
                         <p className="text-justify mb-3">{description}.</p>
                         <Heading as={"h5"} size="sm">Stock: {stock}</Heading>
                         <Heading as={"h5"} size="sm" className="badge badge-primary">Stock: {stock}</Heading>
