@@ -18,6 +18,10 @@ import AddAdmin from "./pages/admin/Manage/add-admin";
 import NewOrder from "./pages/admin/orders/new-order";
 import AllOrders from "./pages/admin/orders/all-orders";
 import { GET_ADMIN_DATA, LOADING_END, LOADING_START } from './redux/actions/types'
+import Stockopname from "./pages/admin/stockopname/Stockopname";
+import AddStock from "./pages/admin/stockopname/AddStock";
+import Cart from "./pages/user/Cart";
+import About from "./pages/user/About";
 
 
 function App() {
@@ -45,6 +49,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<Products />} />
         <Route path="/detail-product/:id" element={<DetailProductUser />} />
+        <Route path="/carts" element={<Cart />} />
+        <Route path="/about" element={<About />} />
         <Route path="/admin" element={<HomeAdmin />} />
         <Route path="/admin/login" element={<Login />} />
         <Route path="/admin/add-admin" element={<AddAdmin />} />
@@ -58,6 +64,8 @@ function App() {
         <Route path="/admin/detail-product/:id" element={<DetailProduct />} />
         <Route path="/admin/categories/" element={<Categories />} />
         <Route path="/admin/add-category/" element={<FormCategories />} />
+        <Route path="/admin/stockopname/" element={<Stockopname />} />
+        <Route path="/admin/add-stock/" element={<AddStock />} />
       </Routes>
     </div>
   );

@@ -8,11 +8,13 @@ import Crud from './../../../component/subcomponent/Crud';
 import Pagination from "../../../component/Pagination";
 import Footer from "../../../component/Footer";
 import ModalDelete from "../../../component/subcomponent/ModalDelete";
+import { useDispatch } from 'react-redux';
+import NumberFormat from 'react-number-format';
 
 const apiUrl = process.env.REACT_APP_API_URL
 
 function Product() {
-
+  const dispatch = useDispatch()
   const [products, setProducts] = useState([])
   const [categories, setCategories] = useState([])
   const [category, setCategory] = useState(null)
@@ -96,7 +98,6 @@ function Product() {
   }
 
   const onHandleCategory = (e) => {
-    console.log(e.target.value)
     const selectCategory = e.target.value === "All" ? "" : e.target.value
     setCategory(selectCategory)
   }
@@ -110,9 +111,9 @@ function Product() {
   }
 
   useEffect(() => {
-    if(role !== 'BearerAdmin' || role === null){
-      return (navigate('/user/login'))
-    }
+    // if (role !== 'BearerAdmin' || role === null) {
+    //   return (navigate('/user/login'))
+    // }
 
     setLoading(true)
     Axios.get(`${apiUrl}/product`, {
@@ -151,7 +152,9 @@ function Product() {
     Axios.get(`${apiUrl}/all-category`)
       .then(response => {
         setLoading(false)
-        setCategories(response.data.data)
+        const data = response.data.data
+        setCategories(data)
+        dispatch({ type: 'GET_CATHEGORY', payload: data })
       })
       .catch(err => {
         setLoading(false)
@@ -180,7 +183,7 @@ function Product() {
                           <input type="text" className="form-control" placeholder="Search" ref={searcKey} />
                         </div>
                         <div className="col-auto">
-                          <button type="btn" className="btn app-btn-secondary" onClick={onHandleSearch}>Search</button>
+                          <button type="btn" className="btn app-btn-secondary btn-secondary" onClick={onHandleSearch}>Search</button>
                         </div>
                       </div>
 
@@ -205,7 +208,7 @@ function Product() {
                       </select>
                     </div>
                     <div className="col-auto">
-                      <RouterLink to={"/admin/add-product"} className="btn app-btn-primary">
+                      <RouterLink to={"/admin/add-product"} className="btn app-btn-primary btn-info">
                         Add Product
                       </RouterLink>
                     </div>
@@ -230,7 +233,17 @@ function Product() {
                           <Heading as={"h2"} className="app-doc-title truncate mb-2">{product.productName}</Heading>
                           <div className="app-doc-meta">
                             <ul key={product.id} className="list-unstyled mb-2">
-                              <li className="mb-2"><span className="text-secondary">Rp. </span>{product.price}</li>
+                              <li className="mb-2">
+                                <span className="text-secondary">
+                                  <NumberFormat
+                                    value={product.price}
+                                    displayType={'text'}
+                                    thousandSeparator={true}
+                                    prefix={'Rp. '}
+                                    renderText={value => <span>{value}</span>}
+                                  />
+                                </span>
+                              </li>
                               <li><span className="text-secondary mb-2">Stock:</span> {product.stock}</li>
                               <li className="my-2"><Badge variant='solid' colorScheme='purple'>{product.categoryName}</Badge></li>
                             </ul>

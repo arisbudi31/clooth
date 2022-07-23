@@ -15,13 +15,15 @@ import loadingReducer from './redux/reducers/loading-reducer';
 import userReducer from './redux/reducers/user-reducers';
 import cartReducer from './redux/reducers/cart-reducers';
 import orderReducer from './redux/reducers/order-reducers';
+import categoryReducer from './redux/reducers/category-reducers';
 
 const Reducer = combineReducers({
-  admin : adminReducer,
-  loading : loadingReducer,
+  admin: adminReducer,
+  loading: loadingReducer,
   users: userReducer,
   cart: cartReducer,
   order: orderReducer,
+  category: categoryReducer
 })
 
 //create global store
