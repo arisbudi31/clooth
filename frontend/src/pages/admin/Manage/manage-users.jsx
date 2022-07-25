@@ -131,11 +131,9 @@ export default function ManageUsers() {
         .then((resp) => {
             dispatch({type: LOADING_END})
             dispatch({type: GET_USER_DATA, payload: {data: resp.data, count: 1, error: ''}})
-            console.log('respond when search user by username:', resp);
         })
         .catch ((err) => {
             dispatch({type: LOADING_END})
-            console.log(`error when search user by username:`, err.response);
             dispatch({type: GET_ERROR_USER, payload: {error: err.response}})
             if(err.response){
                 return toast({

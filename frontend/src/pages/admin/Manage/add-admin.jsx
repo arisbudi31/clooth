@@ -53,14 +53,11 @@ export default function AddAdmin() {
             password: values.password,
             repassword: values.repassword
         }
-        console.log(`body:`, bodyOnAddAdmin)
-        console.log(`api url:`, API_URL);
 
         dispatch({type: LOADING_START})
         await Axios.post(API_URL + `/api/admin/${token}/add-admin`, bodyOnAddAdmin)
         .then((resp) => {
             dispatch({type: LOADING_END})
-            console.log(`respond when register admin:`, resp);
             toast({
                 title: "Login Success",
                 description: "Login Success",
@@ -73,7 +70,6 @@ export default function AddAdmin() {
             })
         .catch ((err) => {
             dispatch({type: LOADING_END})
-            console.log(`error when register admin:`, err);
             if(err){
                 return toast({
                 title: `Error`,

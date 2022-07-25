@@ -10,13 +10,10 @@ import { LOADING_END } from "../../redux/actions/types";
 export default function HomeAdmin() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    // const {role} = useSelector(state => state.access)
     const role = localStorage.getItem("akses")
     const token = localStorage.getItem("tokenAdmin")
     const keepLogin = localStorage.getItem("keepLogin")
     const {loading} = useSelector(state => state.loading)
-    console.log(`loading at admin home:`, loading);
-    console.log(`role:`,role);
 
     if(role !== 'BearerAdmin' || role === null){
         return (navigate('/user/login'))
@@ -134,7 +131,6 @@ export default function HomeAdmin() {
                                             {/* <!--//row--> */}
                                         </div>
                                         {/* <!--//app-card-header--> */}
-
                                         <div className="app-card-body p-3 p-lg-4">
                                             <div className="mb-3 d-flex">   
                                                 <select className="form-select form-select-sm ms-auto d-inline-flex w-auto">
@@ -145,11 +141,10 @@ export default function HomeAdmin() {
                                                 </select>
                                             </div>
                                             <div className="chart-container">
-                                                <canvas id="canvas-linechart" ></canvas>
+                                                <canvas id="chart-line" ></canvas>
                                             </div>
                                         </div>
                                         {/* <!--//app-card-body--> */}
-
                                     </div>
                                     {/* <!--//app-card--> */}
                                 </div>
@@ -186,11 +181,10 @@ export default function HomeAdmin() {
                                                 </select>
                                             </div>
                                             <div className="chart-container">
-                                                <canvas id="canvas-barchart" ></canvas>
+                                                <canvas id="chart-bar" ></canvas>
                                             </div>
                                         </div>
                                         {/* <!--//app-card-body--> */}
-
                                     </div>
                                     {/* <!--//app-card--> */}
                                 </div>

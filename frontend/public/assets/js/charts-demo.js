@@ -20,14 +20,13 @@ var lineChartConfig = {
 	type: 'line',
 
 	data: {
-		labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+		labels: ['15 May', '30 May', '15 Jun', '30 Jun', '15 Jul', '30 Jul'],
 		
 		datasets: [{
 			label: 'Dataset',
-			backgroundColor: "rgba(117,193,129,0.2)", 
+			backgroundColor: "rgba(130,193,129,0.2)", 
 			borderColor: "rgba(117,193,129, 0.8)", 
 			data: [
-				randomDataPoint(),
 				randomDataPoint(),
 				randomDataPoint(),
 				randomDataPoint(),
@@ -94,7 +93,7 @@ var lineChartConfig = {
 				ticks: {
 		            beginAtZero: true,
 		            userCallback: function(value, index, values) {
-		                return value.toLocaleString() + '%';  
+		                return value.toLocaleString() ;  
 		            }
 		        },
 			}]

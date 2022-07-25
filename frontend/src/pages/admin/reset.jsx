@@ -45,7 +45,6 @@ export default function ResetPassword () {
         await axios.patch(API_URL + `/api/admin/reset-password/${adminname}`, bodyOnReset)
         .then((resp) => {
             setSending(false)
-            console.log(`resp:`, resp);
             dispatch({type: LOADING_END})
             toast({
                 title: "Request Success",
@@ -57,7 +56,6 @@ export default function ResetPassword () {
             setTimeout(() => navigate('/admin/login'), 3000)
         })
         .catch((err) => {
-            console.log(`error:`, err);
             setSending(false)
             dispatch({type: LOADING_END})
             if(err){

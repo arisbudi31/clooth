@@ -17,6 +17,7 @@ import DetailProductUser from "./pages/user/DetailProductUser";
 import AddAdmin from "./pages/admin/Manage/add-admin";
 import NewOrder from "./pages/admin/orders/new-order";
 import AllOrders from "./pages/admin/orders/all-orders";
+import Reports from "./pages/admin/report";
 import { GET_ADMIN_DATA, LOADING_END, LOADING_START } from './redux/actions/types'
 
 
@@ -58,6 +59,7 @@ function App() {
         <Route path="/admin/detail-product/:id" element={<DetailProduct />} />
         <Route path="/admin/categories/" element={<Categories />} />
         <Route path="/admin/add-category/" element={<FormCategories />} />
+        <Route path="/admin/reports" element={<Reports/>}/>
       </Routes>
     </div>
   );
