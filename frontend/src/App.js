@@ -17,7 +17,7 @@ import DetailProductUser from "./pages/user/DetailProductUser";
 import AddAdmin from "./pages/admin/Manage/add-admin";
 import NewOrder from "./pages/admin/orders/new-order";
 import AllOrders from "./pages/admin/orders/all-orders";
-import { GET_ADMIN_DATA, LOADING_END, LOADING_START } from './redux/actions/types'
+import { GET_ADMIN_DATA, GET_USER_DATA, LOADING_END, LOADING_START } from './redux/actions/types'
 import Stockopname from "./pages/admin/stockopname/Stockopname";
 import AddStock from "./pages/admin/stockopname/AddStock";
 import Cart from "./pages/user/Cart";
@@ -39,7 +39,16 @@ function App() {
       .then((resp) => {
         dispatch({ type: LOADING_END })
         dispatch({ type: GET_ADMIN_DATA, payload: resp.data })
+      })
+      .catch((err) => {
+        dispatch({ type: LOADING_END })
+        console.log(`error when keep login:`, err);
+      })
 
+    axios.get(API_URL + '/user', { headers: { "authorization": token } })
+      .then((resp) => {
+        dispatch({ type: LOADING_END })
+        dispatch({ type: GET_USER_DATA, payload: resp.data })
       })
       .catch((err) => {
         dispatch({ type: LOADING_END })
