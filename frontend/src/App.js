@@ -19,7 +19,6 @@ import NewOrder from "./pages/admin/orders/new-order";
 import AllOrders from "./pages/admin/orders/all-orders";
 import { GET_ADMIN_DATA, GET_USER_DATA, LOADING_END, LOADING_START } from './redux/actions/types'
 import Reports from "./pages/admin/report";
-import { GET_ADMIN_DATA, LOADING_END, LOADING_START } from './redux/actions/types'
 import Stockopname from "./pages/admin/stockopname/Stockopname";
 import AddStock from "./pages/admin/stockopname/AddStock";
 import Cart from "./pages/user/Cart";
@@ -84,7 +83,7 @@ function App() {
         <Route path="/admin/detail-product/:id" element={<DetailProduct />} />
         <Route path="/admin/categories/" element={<Categories />} />
         <Route path="/admin/add-category/" element={<FormCategories />} />
-        <Route path="/admin/reports" element={<Reports/>}/>
+        <Route path="/admin/reports" element={<Reports />} />
         <Route path="/admin/stockopname/" element={<Stockopname />} />
         <Route path="/admin/add-stock/" element={<AddStock />} />
       </Routes>
