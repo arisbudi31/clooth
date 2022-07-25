@@ -2,6 +2,7 @@ import React from "react";
 import { BsCart } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
+import logo from '../../../assets/images/clooth-logo.png'
 
 function Header() {
   const { count } = useSelector(state => state.cart)
@@ -12,8 +13,9 @@ function Header() {
           <div className="col-12">
             <nav className="main-nav">
               {/* <!-- ***** Logo Start ***** --> */}
-              <a href="index.html" className="logo mt-4">
-                <h5>CLOOTH</h5>
+              <a href="/" className="logo mt-4 d-flex">
+                <img src={logo} alt="logo" width={30} height={30} />
+                <h5 className="ml-2">CLOOTH</h5>
               </a>
               {/* <!-- ***** Logo End ***** --> */}
               {/* <!-- ***** Menu Start ***** --> */}

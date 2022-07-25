@@ -2,16 +2,22 @@ import React, { useRef, useState, useEffect } from "react"
 import { Box, Button, Flex, Heading, Image, Input, Text, Textarea, useToast } from "@chakra-ui/react"
 import Axios from "axios"
 import { useNavigate } from 'react-router-dom';
+import { LOADING_END } from "../../../redux/actions/types";
+import { useDispatch } from 'react-redux';
 
 const apiUrl = process.env.REACT_APP_API_URL
 
 function FormCategories() {
-  // const location = useLocation()
+  const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
   const category_name = useRef("")
   const slug = useRef("")
   const navigate = useNavigate()
   const toast = useToast()
+
+  const role = localStorage.getItem("akses")
+  const token = localStorage.getItem("tokenAdmin")
+  const keepLogin = localStorage.getItem("keepLogin")
 
   const onButtonAddCategories = () => {
     setLoading(true)
@@ -50,6 +56,24 @@ function FormCategories() {
 
   const onButtonCancel = () => {
     navigate('/admin/categories/')
+  }
+
+  if (keepLogin === 'false') {
+    setTimeout(() => navigate('/admin/login'), 10000)
+    setTimeout(() => localStorage.removeItem("tokenAdmin"), 10000)
+    dispatch({ type: LOADING_END })
+  }
+  else if (token === null) {
+    setTimeout(() => navigate('/admin/login'), 5000)
+    return (
+      <Box ml="100px" mt="50px" fontSize={"6xl"} fontWeight="extrabold">
+        <h1>You have to Log In first.</h1>
+      </Box>
+    )
+  }
+
+  if (role !== 'BearerAdmin' || role === null) {
+    return (navigate('/user/login'))
   }
 
   return (

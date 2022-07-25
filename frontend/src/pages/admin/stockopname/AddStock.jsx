@@ -19,13 +19,15 @@ function AddStock() {
   const [initStock, setInitStock] = useState(null)
   const stock = useRef(0)
   const toast = useToast()
+  const role = localStorage.getItem("akses")
+  const token = localStorage.getItem("tokenAdmin")
+  const keepLogin = localStorage.getItem("keepLogin")
 
   const onButtonCancel = () => {
     navigate('/admin/stockopname/')
   }
 
   const onBtnHandleCategory = (e) => {
-    console.log(e.target.value)
     const selectCategory = e.target.value ? e.target.value : null
 
     dispatch({ type: LOADING_START })
@@ -55,7 +57,6 @@ function AddStock() {
   }
 
   const onBtnHandleStatus = (e) => {
-    console.log(e.target.value)
     const selectStatus = e.target.value ? e.target.value : null
     setSelectedStatus(selectStatus)
   }
@@ -115,6 +116,24 @@ function AddStock() {
           isClosable: true
         })
       })
+  }
+
+  if (keepLogin === 'false') {
+    setTimeout(() => navigate('/admin/login'), 10000)
+    setTimeout(() => localStorage.removeItem("tokenAdmin"), 10000)
+    dispatch({ type: LOADING_END })
+  }
+  else if (token === null) {
+    setTimeout(() => navigate('/admin/login'), 5000)
+    return (
+      <Box ml="100px" mt="50px" fontSize={"6xl"} fontWeight="extrabold">
+        <h1>You have to Log In first.</h1>
+      </Box>
+    )
+  }
+
+  if (role !== 'BearerAdmin' || role === null) {
+    return (navigate('/user/login'))
   }
 
   return (
