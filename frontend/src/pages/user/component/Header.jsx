@@ -49,8 +49,9 @@ function Header() {
           <div className="col-12">
             <nav className="main-nav">
               {/* <!-- ***** Logo Start ***** --> */}
-              <a href="index.html" className="logo mt-4">
-                <h5>CLOOTH</h5>
+              <a href="/" className="logo mt-4 d-flex">
+                <img src={logo} alt="logo" width={30} height={30} />
+                <h5 className="ml-2">CLOOTH</h5>
               </a>
               {/* <!-- ***** Logo End ***** --> */}
               {/* <!-- ***** Menu Start ***** --> */}

@@ -1,17 +1,21 @@
 import React, { useEffect, useRef, useState } from "react"
 import Axios from "axios"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { BsTrash, BsPencilSquare } from "react-icons/bs"
 import Header from "../../../component/Header"
 import Loading from "../../../component/subcomponent/Loading"
 import Pagination from "../../../component/Pagination"
 import Footer from "../../../component/Footer"
-import { Button, useToast } from "@chakra-ui/react"
+import { Button, useToast, Box } from "@chakra-ui/react"
 import ModalDelete from "../../../component/subcomponent/ModalDelete"
+import { LOADING_END } from "../../../redux/actions/types";
+import { useDispatch } from 'react-redux';
 
 const apiUrl = process.env.REACT_APP_API_URL
 
 function Categories() {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const categoryEdit = useRef("")
   const slugEdit = useRef("")
   const [loading, setLoading] = useState(false)
@@ -23,6 +27,10 @@ function Categories() {
   const [currentPage, setCurrentPage] = useState(1)
   const [catSearch, setCatSearch] = useState(null)
   const [num, setNum] = useState(0)
+
+  const role = localStorage.getItem("akses")
+  const token = localStorage.getItem("tokenAdmin")
+  const keepLogin = localStorage.getItem("keepLogin")
 
   const search = useRef("")
 
@@ -142,7 +150,6 @@ function Categories() {
   }
 
   const onHandlePageClick = (data) => {
-    // setNum((num + data.selected) * 5)
     setCurrentPage(data.selected + 1)
   }
 
@@ -182,6 +189,24 @@ function Categories() {
 
       })
   }, [currentPage, catSearch])
+
+  if (keepLogin === 'false') {
+    setTimeout(() => navigate('/admin/login'), 10000)
+    setTimeout(() => localStorage.removeItem("tokenAdmin"), 10000)
+    dispatch({ type: LOADING_END })
+  }
+  else if (token === null) {
+    setTimeout(() => navigate('/admin/login'), 5000)
+    return (
+      <Box ml="100px" mt="50px" fontSize={"6xl"} fontWeight="extrabold">
+        <h1>You have to Log In first.</h1>
+      </Box>
+    )
+  }
+
+  if (role !== 'BearerAdmin' || role === null) {
+    return (navigate('/user/login'))
+  }
 
   return (
     <>

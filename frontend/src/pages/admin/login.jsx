@@ -58,14 +58,14 @@ export default function Login() {
       adminname: values.email,
       password: values.password
     }
-    console.log(`body:`, bodyOnSignIn)
 
     await Axios.post(API_URL + '/admin/login', bodyOnSignIn)
       .then((resp) => {
+        console.log(resp);
         const arr = resp.headers["authtoken"].split(" ")
         const token = arr[1]
+        console.log(token)
         const role = arr[0]
-        console.log();
 
         localStorage.setItem("tokenAdmin", token)
         localStorage.setItem("akses", role)

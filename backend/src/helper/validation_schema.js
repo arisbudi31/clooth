@@ -1,7 +1,8 @@
 const validator = require("password-validator")
 const validatorEmail = require("validator")
 const joi = require("joi")
-const { joiPassword } = require("joi-password")
+const { joiPasswordExtendCore } = require('joi-password');
+const joiPassword = joi.extend(joiPasswordExtendCore);
 
 module.exports.productSchema = joi.object({
   productName: joi.string().min(3).max(45).required(),
@@ -63,9 +64,9 @@ module.exports.registerSchema = joi.object({
 
 module.exports.loginSchema = joi.object({
   login: joi
-  .alternatives()
-  .try(joi.string().min(6).max(45).alphanum(), joi.string().email())
-  .required(),
+    .alternatives()
+    .try(joi.string().min(6).max(45).alphanum(), joi.string().email())
+    .required(),
   password: joi.string().min(4).required(),
 })
 

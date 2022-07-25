@@ -92,8 +92,6 @@ export default function NewOrder() {
         }
     }, [page])
 
-    console.log(`invId:`, values.invId);
-    console.log(`adminApproved:`, values.adminApproved);
 
     const onButtonAccepted = (id) => {
         setConfirm(true)        
