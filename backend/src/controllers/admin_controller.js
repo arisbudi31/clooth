@@ -435,7 +435,7 @@ module.exports.newOrder = async (req, resp) => {
         FROM invoice_headers AS head
         JOIN invoice_details AS det ON det.invHeaderId = head.id
         JOIN users AS us ON us.id = head.userId
-        JOIN user_address AS adr ON adr.id = head.userAddresId
+        JOIN user_address AS adr ON adr.id = head.userAddressId
         JOIN payment_confirmation AS pay ON pay.invHeaderId = head.id
         JOIN admins AS adm ON adm.id = head.adminId
         WHERE adminApproved = 'waiting'
@@ -555,7 +555,7 @@ module.exports.getAllTransactions = async (req, resp) => {
         FROM invoice_headers AS head
         JOIN invoice_details AS det ON det.invHeaderId = head.id
         JOIN users AS us ON us.id = head.userId
-        JOIN user_address AS adr ON adr.id = head.userAddresId
+        JOIN user_address AS adr ON adr.id = head.userAddressId
         JOIN payment_confirmation AS pay ON pay.invHeaderId = head.id
         JOIN admins AS adm ON adm.id = head.adminId
         GROUP BY det.id
@@ -586,4 +586,173 @@ module.exports.getAllTransactions = async (req, resp) => {
     }
 }
 
-//
+/////REPORTS//////
+//GET TOTAL REPORTS//
+module.exports.TotalReports = async(req, resp) => {
+    const token = req.params.token
+    var totalReports = []
+    const fixedCostPerMonth = 1000000
+    try {
+        //verify token
+        if(!token){
+            throw new createError(statusCode.UNAUTHORIZED, statusMessage.UNAUTHORIZED)
+        }
+        const {email} = jwt.verify(token, process.env.SECRET_KEY)
+        console.log('email admin when get all new order:', email)
+
+        //check admin data
+        const getDataAdmin = `SELECT * FROM admins WHERE email = ${db.escape(email)};`
+        const [adminData] = await db.execute(getDataAdmin)
+        console.log('Data Admin When get all new order:', adminData);
+        if(!adminData.length){
+            throw new createError(statusCode.NOT_FOUND, `email Admin ${email} doesn't found`)
+        }
+
+        //get total User
+        const getTotalCustomers = `SELECT COUNT(*) AS totalCustomers
+        FROM users;`
+        const [totalCustomer] = await db.execute(getTotalCustomers)
+
+        //get total order
+        const getTotalOrders = `SELECT COUNT(invoice_headers.id) AS totalOrders
+        FROM invoice_headers;`
+        const [totalOrder] = await db.execute(getTotalOrders)
+
+        //get total fixed Cost
+        const getTotalFixedCost = `SELECT COUNT(Month), COUNT(Month)*${fixedCostPerMonth} AS totalFixedCost
+        FROM
+        (SELECT MONTH(pay.createdAt) AS month
+        FROM payment_confirmation AS pay
+        GROUP BY month) AS month;`
+        const [totalFixedCost] = await db.execute(getTotalFixedCost)
+        console.log(`totalFixedCost:`, totalFixedCost);
+
+        //get total Report
+        const getTotalReport = `SELECT sum(det.reservedStock) AS totalSoldProduct, SUM(det.priceAtTime*det.reservedStock) AS totalRevenue, SUM(pd.basePrice*det.reservedStock) AS totalProductPrice, SUM(pd.cost*det.reservedStock) AS totalVariableCost
+        FROM invoice_details AS det
+        JOIN products AS pd ON pd.id = det.productId;`
+        const [totalReport] = await db.execute(getTotalReport)
+        if(!totalReport.length){
+            throw new createError(statusCode.BAD_REQUEST, statusMessage.BAD_REQUEST)
+        }
+
+        const totalCost = Number(totalReport[0].totalProductPrice) + Number(totalReport[0].totalVariableCost) + Number(totalFixedCost[0].totalFixedCost)
+        const totalProfit = Number(totalReport[0].totalRevenue) - totalCost
+
+        totalReports.push({
+            "totalCustomer" : totalCustomer[0].totalCustomers,
+            "totalOrder" : totalOrder[0].totalOrders,
+            "totalSoldProduct" : Number(totalReport[0].totalSoldProduct),
+            "totalRevenue" : Number(totalReport[0].totalRevenue), 
+            "totalCost" : totalCost, 
+            "totalProfit" : totalProfit,
+        })
+        console.log(`totalReports:`,totalReports);
+
+        //send respond to client
+        const respond = new createRespond(statusCode.OK, statusMessage.OK, 'Get total Report', 1, 1, totalReports)
+        resp.status(respond.status).send(respond)
+    }
+    catch(err) {
+        const throwError = err instanceof createError
+        if(!throwError){
+            new createError(statusCode.INTERNAL_SERVICE_ERROR, statusMessage.INTERNAL_SERVICE_ERROR)
+        } 
+        console.log('error at get total reports:', err);
+        resp.status(err.status).send(err.message)
+    }
+}
+
+//Report ORDER BY//
+module.exports.ReportBy = async(req, resp) => {
+    const token = req.params.token
+    const order = req.query._order || 'month'
+
+    try {
+        //verify token
+        if(!token){
+            throw new createError(statusCode.UNAUTHORIZED, statusMessage.UNAUTHORIZED)
+        }
+        const {email} = jwt.verify(token, process.env.SECRET_KEY)
+        console.log('email admin when get all new order:', email)
+
+        //check admin data
+        const getDataAdmin = `SELECT * FROM admins WHERE email = ${db.escape(email)};`
+        const [adminData] = await db.execute(getDataAdmin)
+        console.log('Data Admin When get all new order:', adminData);
+        if(!adminData.length){
+            throw new createError(statusCode.NOT_FOUND, `email Admin ${email} doesn't found`)
+        }
+
+        //get report period
+        const getReportsBy = `SELECT sum(det.reservedStock) AS totalSoldProduct, FORMAT(SUM(det.priceAtTime*det.reservedStock), 0) AS totalRevenue, WEEK(pay.createdAt) AS weeks, MONTH(pay.createdAt) AS month
+        FROM invoice_details AS det
+        JOIN invoice_headers AS head ON head.id = det.invHeaderId
+        JOIN payment_confirmation AS pay ON pay.invHeaderId = head.id
+        GROUP BY ${order}
+        ORDER BY ${order} ASC;`
+        const [reportsBy] = await db.execute(getReportsBy)
+        console.log('reportBy:', reportsBy);
+        if(!reportsBy.length){
+            throw new createError(statusCode.BAD_REQUEST, statusMessage.BAD_REQUEST)
+        }
+
+        //send respond to client
+        const respond = new createRespond(statusCode.OK, statusMessage.OK, 'Get report period by', reportsBy.length, reportsBy.length, reportsBy)
+        resp.status(respond.status).send(respond)
+    }
+    catch(err) {
+        const throwError = err instanceof createError
+        if(!throwError){
+            new createError(statusCode.INTERNAL_SERVICE_ERROR, statusMessage.INTERNAL_SERVICE_ERROR)
+        } 
+        console.log('error at get reports periode by:', err);
+        resp.status(err.status).send(err.message)
+    }
+}
+
+//get top 3 most sold
+module.exports.TopThree = async(req, resp) => {
+    const token = req.params.token
+
+    try {
+        //verify token
+        if(!token){
+            throw new createError(statusCode.UNAUTHORIZED, statusMessage.UNAUTHORIZED)
+        }
+        const {email} = jwt.verify(token, process.env.SECRET_KEY)
+        console.log('email admin when get all new order:', email)
+
+        //check admin data
+        const getDataAdmin = `SELECT * FROM admins WHERE email = ${db.escape(email)};`
+        const [adminData] = await db.execute(getDataAdmin)
+        console.log('Data Admin When get all new order:', adminData);
+        if(!adminData.length){
+            throw new createError(statusCode.NOT_FOUND, `email Admin ${email} doesn't found`)
+        }
+
+        //get top 3 product most sold
+        const getTop3 = `SELECT det.productId AS productId, pd.image, SUM(det.reservedStock) AS qtyOrder
+        FROM invoice_details AS det
+        JOIN products AS pd ON pd.id = det.productId
+        GROUP BY productId
+        ORDER BY qtyOrder DESC
+        LIMIT 3;`
+        const [top3] = await db.execute(getTop3)
+        if(!top3.length){
+            throw new createError(statusCode.BAD_REQUEST, statusMessage.BAD_REQUEST)
+        }
+
+        //send respond to client
+        const respond = new createRespond(statusCode.OK, statusMessage.OK, 'Get report period by', top3.length, top3.length, top3)
+        resp.status(respond.status).send(respond)
+    }
+    catch(err) {
+        const throwError = err instanceof createError
+        if(!throwError){
+            new createError(statusCode.INTERNAL_SERVICE_ERROR, statusMessage.INTERNAL_SERVICE_ERROR)
+        } 
+        console.log('error at get top3:', err);
+        resp.status(err.status).send(err.message)
+    }
+}
