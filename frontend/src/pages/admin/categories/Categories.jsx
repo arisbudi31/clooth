@@ -206,12 +206,12 @@ function Categories() {
                           <input type="text" className="form-control" placeholder="Search" ref={search} />
                         </div>
                         <div className="col-auto">
-                          <button className="btn app-btn-secondary" onClick={onHandleSearch}>Search</button>
+                          <button className="btn app-btn-secondary btn-secondary" onClick={onHandleSearch}>Search</button>
                         </div>
                       </div>
                     </div>
                     <div className="col-auto">
-                      <Link to={"/admin/add-category"} className="btn app-btn-primary">
+                      <Link to={"/admin/add-category"} className="btn app-btn-primary btn-info">
                         Add Category
                       </Link>
                     </div>

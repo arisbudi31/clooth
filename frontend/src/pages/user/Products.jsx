@@ -6,11 +6,14 @@ import ProductBanner from "./component/product/ProductBanner";
 import { useToast } from '@chakra-ui/react';
 import Pagination from "./component/product/subcomponent/Pagination";
 import { Link } from "react-router-dom";
-
+import { useDispatch } from 'react-redux/es/exports';
+import NumberFormat from 'react-number-format';
+import { UPDATE_CARTS } from "../../redux/actions/types";
+import { Text } from "@chakra-ui/react"
 const apiUrl = process.env.REACT_APP_API_URL
 
 function Products() {
-
+  const dispatch = useDispatch()
   const [products, setProducts] = useState([])
   const [totalPage, setTotalPage] = useState(null)
   const [currentPage, setCurrentPage] = useState(null)
@@ -40,6 +43,36 @@ function Products() {
 
   const onHandleSearch = () => {
     setSearch(searcKey.current.value)
+  }
+
+  const onHandleAddtoCart = (id) => {
+    Axios.post(`${apiUrl}/carts`, {
+      id_product: id
+    })
+      .then(response => {
+        const totalCart = response.data
+
+        dispatch({ type: UPDATE_CARTS, payload: { count: totalCart?.total_count?.total_cart } })
+
+        toast({
+          position: "top",
+          title: totalCart?.data,
+          status: 'success',
+          duration: 3000,
+          isClosable: true
+        })
+
+      })
+      .catch(err => {
+
+        toast({
+          position: "top",
+          title: err?.response?.data?.data,
+          status: 'error',
+          duration: 3000,
+          isClosable: true
+        })
+      })
   }
 
   useEffect(() => {
@@ -135,14 +168,24 @@ function Products() {
                             <li>
                               <Link to={`/detail-product/${product.id}`}><i class="fas fa-eye"></i></Link>
                             </li>
-                            <li><a href="single-product.html"><i class="fa fa-shopping-cart"></i></a></li>
+                            <li>
+                              <Link to={""} onClick={() => onHandleAddtoCart(product.id)}>
+                                <i class="fa fa-shopping-cart"></i>
+                              </Link>
+                            </li>
                           </ul>
                         </div>
                         <img className="image-product" src={product.image} alt="" />
                       </div>
                       <div class="down-content">
                         <h4>{product.productName}</h4>
-                        <span>Rp. {product.price}</span>
+                        <NumberFormat
+                          value={product.price}
+                          displayType={'text'}
+                          thousandSeparator={true}
+                          prefix={'Rp. '}
+                          renderText={value => <span>{value}</span>}
+                        />
                       </div>
                     </div>
                   </div>
