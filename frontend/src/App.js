@@ -22,7 +22,11 @@ import Stockopname from "./pages/admin/stockopname/Stockopname";
 import AddStock from "./pages/admin/stockopname/AddStock";
 import Cart from "./pages/user/Cart";
 import About from "./pages/user/About";
-
+import UserRegister from "./pages/user/Register"
+import ForgotPassword from "./pages/user/component/ForgotPassword"
+import ResetPasswordUser from "./pages/user/ResetPassword";
+import UserLogin from "./pages/user/Login";
+import Verification from "./pages/user/Verification";
 
 function App() {
   const API_URL = process.env.REACT_APP_API_URL
@@ -50,6 +54,11 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/detail-product/:id" element={<DetailProductUser />} />
         <Route path="/carts" element={<Cart />} />
+        <Route path="/register" element={<UserRegister />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:email" element={<ResetPasswordUser />} />
+        <Route path="/login" element={<UserLogin />} />
+        <Route path="/verification" element={<Verification />} />
         <Route path="/about" element={<About />} />
         <Route path="/admin" element={<HomeAdmin />} />
         <Route path="/admin/login" element={<Login />} />
