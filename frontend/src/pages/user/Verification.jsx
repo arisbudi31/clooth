@@ -7,16 +7,35 @@ import { useState } from 'react'
 
 const API_URL = process.env.REACT_APP_API_URL
 
-function Verification() {
-  const [user, setUser] = useState([])
-  const GetUser = async () => {
-  await  Axios.get(API_URL + '/users')
-      .then((resp) => {
-        setUser(resp.data)
-        console.log(resp.data)
+export default function Verification() {
+  const navigate = useNavigate()
+  const toast = useToast()
+  const isVerified = false
+  const [values] = React.useState({
+    email: ''
+  })
+
+  const onLinkVerification = async () => {
+    const bodyOnVerification = {
+      email: values.email
+    };
+    console.log(`body:`, bodyOnVerification)
+    console.log(`api url:`, API_URL)
+
+    await Axios.get(API_URL + '/users', bodyOnVerification)
+    .then((resp) => {
+      console.log(resp.data)
+      const email = resp.data
+
+      toast({
+        title: "Get user Success",
+        description: "Get user Success",
+        status: 'success',
+        duration: 3000,
+        isClosable: true
       })
       .catch((err) => {
-        console.log(`error getUser:`, err);
+        console.log(`error verification:`, err);
         if (err) {
           return toast({
             title: `Error`,
@@ -27,19 +46,7 @@ function Verification() {
           })
         }
       })
-  }
-  GetUser();
-  const navigate = useNavigate()
-  const toast = useToast()
-  const isVerified = false
-
-  const onLinkVerification = async () => {
-    const bodyOnVerification = {
-      email: user.email
-    };
-    console.log(`body:`, bodyOnVerification)
-    console.log(`api url:`, API_URL)
-    alert(user.email)
+    })
 
     await Axios.post(API_URL + '/verification', bodyOnVerification)
       .then((resp) => {
@@ -132,7 +139,4 @@ function Verification() {
       }
     </Box>
   );
-
 }
-
-export default Verification;

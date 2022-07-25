@@ -435,7 +435,5 @@ module.exports.resendVerificationEmail = async (req, res) => {
 };
 
 module.exports.logout = async (req, resp) => {
-  console.log(localStorage);
   localStorage.removeItem("token");
-  console.log(localStorage);
 };

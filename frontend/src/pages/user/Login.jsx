@@ -52,11 +52,11 @@ export default function UserLogin() {
         console.log(resp.data)
         const token = resp.data.token
         localStorage.setItem("token", token)
-        // if (!keepLogin[0].checked) {
-        //   localStorage.setItem("keepLogin", 'false')
-        // } else {
-        //   localStorage.setItem("keepLogin", 'true')
-        // }
+        if (!keepLogin[0].checked) {
+          localStorage.setItem("keepLogin", 'false')
+        } else {
+          localStorage.setItem("keepLogin", 'true')
+        }
         
         dispatch({ type: LOADING_END })
         toast({
@@ -66,9 +66,10 @@ export default function UserLogin() {
           duration: 3000,
           isClosable: true,
         })
-        // if (resp.data.is_verified == "verified") {
-        //   navigate(`/`)
-        // } else {
+        if (resp.data.is_verified == "verified") {
+          navigate(`/`)
+        }
+        // else {
         //   navigate(`/verification`)
         // }
 
