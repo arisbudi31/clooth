@@ -3,6 +3,8 @@ import { Box, Button, Flex, Heading, Image, Input, Select, Text, Textarea, useTo
 import Axios from "axios"
 import { useParams } from "react-router"
 import { useLocation, useNavigate } from "react-router-dom"
+import { LOADING_END } from "../../../redux/actions/types";
+import { useDispatch } from 'react-redux/es/exports';
 
 const apiUrl = process.env.REACT_APP_API_URL
 function FormProduct(props) {
@@ -12,6 +14,7 @@ function FormProduct(props) {
   const description = useRef("")
   const price = useRef("")
   const stock = useRef("")
+  const dispatch = useDispatch()
 
   const [saveImage, setSaveImage] = useState(null)
   const [prod, setProd] = useState("")
@@ -30,6 +33,8 @@ function FormProduct(props) {
   const navigate = useNavigate()
   const toast = useToast()
   const role = localStorage.getItem("akses")
+  const token = localStorage.getItem("tokenAdmin")
+  const keepLogin = localStorage.getItem("keepLogin")
 
   const imageHandler = (e) => {
 
@@ -165,10 +170,6 @@ function FormProduct(props) {
   useEffect(() => {
     const titlePathname = location.pathname.includes("edit") ? "Edit" : "Add"
 
-    if(role !== 'BearerAdmin' || role === null){
-      return (navigate('/user/login'))
-    }
-
     setTitle(titlePathname)
 
     Axios.get(`${apiUrl}/product/${id}`)
@@ -197,6 +198,24 @@ function FormProduct(props) {
 
 
   }, [])
+
+  if (keepLogin === 'false') {
+    setTimeout(() => navigate('/admin/login'), 10000)
+    setTimeout(() => localStorage.removeItem("tokenAdmin"), 10000)
+    dispatch({ type: LOADING_END })
+  }
+  else if (token === null) {
+    setTimeout(() => navigate('/admin/login'), 5000)
+    return (
+      <Box ml="100px" mt="50px" fontSize={"6xl"} fontWeight="extrabold">
+        <h1>You have to Log In first.</h1>
+      </Box>
+    )
+  }
+
+  if (role !== 'BearerAdmin' || role === null) {
+    return (navigate('/user/login'))
+  }
 
   return (
     <Box w={"100%"}>
@@ -269,10 +288,6 @@ function FormProduct(props) {
               </Box>
             </>
             :
-            // <Image objectFit={"cover"} boxSize={"100px"} mb={2}
-            //   src={imageBase}
-            //   alt='Product image'
-            //   borderRadius={8} />
             null
           }
 

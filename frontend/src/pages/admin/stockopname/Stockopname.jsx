@@ -1,24 +1,29 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Axios from "axios"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../../component/Footer";
 import Header from "../../../component/Header";
 import Pagination from "../../../component/Pagination"
 import { useDispatch, useSelector } from 'react-redux/es/exports';
-import { useToast } from '@chakra-ui/react';
+import { useToast, Box } from '@chakra-ui/react';
 import Loading from "../../../component/subcomponent/Loading";
 import { LOADING_START, LOADING_END, GET_ADMIN_DATA } from "../../../redux/actions/types";
 
 const apiUrl = process.env.REACT_APP_API_URL
 
 function Stockopname() {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const toast = useToast()
   const [stocks, setStocks] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPage, setTotalPage] = useState(null)
   const { loading } = useSelector(state => state.loading)
+
+  const role = localStorage.getItem("akses")
+  const token = localStorage.getItem("tokenAdmin")
+  const keepLogin = localStorage.getItem("keepLogin")
 
   const onHandlePageClick = (data) => {
     setCurrentPage(data.selected + 1)
@@ -51,6 +56,24 @@ function Stockopname() {
 
       })
   }, [])
+
+  if (keepLogin === 'false') {
+    setTimeout(() => navigate('/admin/login'), 10000)
+    setTimeout(() => localStorage.removeItem("tokenAdmin"), 10000)
+    dispatch({ type: LOADING_END })
+  }
+  else if (token === null) {
+    setTimeout(() => navigate('/admin/login'), 5000)
+    return (
+      <Box ml="100px" mt="50px" fontSize={"6xl"} fontWeight="extrabold">
+        <h1>You have to Log In first.</h1>
+      </Box>
+    )
+  }
+
+  if (role !== 'BearerAdmin' || role === null) {
+    return (navigate('/user/login'))
+  }
 
 
   return (
