@@ -3,20 +3,22 @@ import Axios from "axios"
 import { Link as RouterLink, useNavigate } from "react-router-dom"
 import Header from './../../../component/Header';
 import Loading from "../../../component/subcomponent/Loading";
-import { Badge, Heading, useToast } from "@chakra-ui/react";
+import { Badge, Heading, useToast, Box } from "@chakra-ui/react";
 import Crud from './../../../component/subcomponent/Crud';
 import Pagination from "../../../component/Pagination";
 import Footer from "../../../component/Footer";
 import ModalDelete from "../../../component/subcomponent/ModalDelete";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import NumberFormat from 'react-number-format';
+import { LOADING_END } from "../../../redux/actions/types";
 
 const apiUrl = process.env.REACT_APP_API_URL
 
 function Product() {
   const dispatch = useDispatch()
   const [products, setProducts] = useState([])
-  const [categories, setCategories] = useState([])
+  // const [categories, setCategories] = useState([])
+  const { categories } = useSelector(state => state.category)
   const [category, setCategory] = useState(null)
   const [search, setSearch] = useState("")
   const [currentPage, setCurrentPage] = useState(null)
@@ -26,7 +28,10 @@ function Product() {
   const [totalPage, setTotalPage] = useState(null)
   const [sort, setSort] = useState(null)
   const navigate = useNavigate()
+  const token = localStorage.getItem("tokenAdmin")
+  const keepLogin = localStorage.getItem("keepLogin")
   const role = localStorage.getItem("akses")
+
 
   const searcKey = useRef("")
   const sortSelected = useRef(null)
@@ -148,19 +153,37 @@ function Product() {
       })
   }, [search, category, currentPage, sort])
 
-  useEffect(() => {
-    Axios.get(`${apiUrl}/all-category`)
-      .then(response => {
-        setLoading(false)
-        const data = response.data.data
-        setCategories(data)
-        dispatch({ type: 'GET_CATHEGORY', payload: data })
-      })
-      .catch(err => {
-        setLoading(false)
-        console.log(err)
-      })
-  }, [])
+  // useEffect(() => {
+  //   Axios.get(`${apiUrl}/all-category`)
+  //     .then(response => {
+  //       setLoading(false)
+  //       const data = response.data.data
+  //       setCategories(data)
+  //       dispatch({ type: 'GET_CATHEGORY', payload: data })
+  //     })
+  //     .catch(err => {
+  //       setLoading(false)
+  //       console.log(err)
+  //     })
+  // }, [])
+
+  if (keepLogin === 'false') {
+    setTimeout(() => navigate('/admin/login'), 10000)
+    setTimeout(() => localStorage.removeItem("tokenAdmin"), 10000)
+    dispatch({ type: LOADING_END })
+  }
+  else if (token === null) {
+    setTimeout(() => navigate('/admin/login'), 5000)
+    return (
+      <Box ml="100px" mt="50px" fontSize={"6xl"} fontWeight="extrabold">
+        <h1>You have to Log In first.</h1>
+      </Box>
+    )
+  }
+
+  if (role !== 'BearerAdmin' || role === null) {
+    return (navigate('/user/login'))
+  }
 
   return (
     <>

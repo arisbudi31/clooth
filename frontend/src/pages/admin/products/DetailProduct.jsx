@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react"
 import Axios from "axios"
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router"
-import { Heading, Badge } from "@chakra-ui/react"
+import { Heading, Badge, Box } from "@chakra-ui/react"
 import Header from "../../../component/Header"
 import Footer from "../../../component/Footer"
 import NumberFormat from 'react-number-format';
+import { LOADING_END } from "../../../redux/actions/types";
+import { useDispatch } from 'react-redux';
 
 const apiUrl = process.env.REACT_APP_API_URL
 
 function DetailProduct() {
-
+  const dispatch = useDispatch()
   const { id } = useParams()
   const [product, setProduct] = useState("")
   const [description, setDescription] = useState("")
@@ -20,11 +22,10 @@ function DetailProduct() {
   const [category, setCategory] = useState("")
   const navigate = useNavigate()
   const role = localStorage.getItem("akses")
+  const token = localStorage.getItem("tokenAdmin")
+  const keepLogin = localStorage.getItem("keepLogin")
 
   useEffect(() => {
-    if (role !== 'BearerAdmin' || role === null) {
-      return (navigate('/user/login'))
-    }
 
     Axios.get(`${apiUrl}/product/${id}`)
       .then(response => {
@@ -41,6 +42,25 @@ function DetailProduct() {
       })
 
   }, [])
+
+  if (keepLogin === 'false') {
+    setTimeout(() => navigate('/admin/login'), 10000)
+    setTimeout(() => localStorage.removeItem("tokenAdmin"), 10000)
+    dispatch({ type: LOADING_END })
+  }
+  else if (token === null) {
+    setTimeout(() => navigate('/admin/login'), 5000)
+    return (
+      <Box ml="100px" mt="50px" fontSize={"6xl"} fontWeight="extrabold">
+        <h1>You have to Log In first.</h1>
+      </Box>
+    )
+  }
+
+  if (role !== 'BearerAdmin' || role === null) {
+    return (navigate('/user/login'))
+  }
+
   return (
     <>
       <Header />

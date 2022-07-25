@@ -1,6 +1,6 @@
 const routers = require('express').Router()
-const admin = require('../controllers/admin-controllers')
-const auth = require('../helpers/authentication')
+const admin = require('../controllers/admin_controller')
+const auth = require('../helper/authentication')
 
 //define ruters
 //admin login
@@ -22,5 +22,6 @@ routers.get('/admin/:token/get-all-orders',admin.getAllTransactions)
 routers.get('/admin/:token/get-total-reports', admin.TotalReports)
 routers.get('/admin/:token/get-periode-reports', admin.ReportBy)
 routers.get('/admin/:token/get-top-3', admin.TopThree)
+routers.get('/admin/:token/get-all-orders', admin.getAllTransactions)
 
 module.exports = routers

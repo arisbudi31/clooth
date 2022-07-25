@@ -4,15 +4,15 @@ const cors = require("cors")
 const path = require("path")
 dotenv.config()
 
-// const corsOption = {
-//   exposedHeaders: 'authorization'
-// }
+const corsOption = {
+  exposedHeaders: ['authToken']
+}
 
 const router = require("./src/routes")
 
 const app = express()
 
-app.use(cors())
+app.use(cors(corsOption))
 app.use(express.json())
 app.use(express.static(path.join(__dirname, "public")))
 
@@ -29,6 +29,8 @@ app.use("/api", router.category)
 app.use("/api", router.product)
 app.use("/api", router.stockopname)
 app.use("/api", router.cart)
+app.use("/api", router.user)
+app.use("/api", router.adminRouter)
 
 app.get("/", (req, res) => {
   res.status(200).send("Welcome to warehouse app server")
