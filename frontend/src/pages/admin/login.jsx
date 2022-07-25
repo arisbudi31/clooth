@@ -65,6 +65,7 @@ export default function Login() {
         console.log(resp);
         const arr = resp.headers["authtoken"].split(" ")
         const token = arr[1]
+        console.log(token)
         const role = arr[0]
 
         localStorage.setItem("tokenAdmin", token)
