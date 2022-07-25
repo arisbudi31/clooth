@@ -29,6 +29,7 @@ app.use("/api", router.category)
 app.use("/api", router.product)
 app.use("/api", router.stockopname)
 app.use("/api", router.cart)
+app.use("/api", router.user)
 
 app.get("/", (req, res) => {
   res.status(200).send("Welcome to warehouse app server")
