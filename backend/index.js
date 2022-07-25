@@ -4,15 +4,15 @@ const cors = require("cors")
 const path = require("path")
 dotenv.config()
 
-// const corsOption = {
-//   exposedHeaders: 'authorization'
-// }
+const corsOption = {
+  exposedHeaders: ['authToken']
+}
 
 const router = require("./src/routes")
 
 const app = express()
 
-app.use(cors())
+app.use(cors(corsOption))
 app.use(express.json())
 app.use(express.static(path.join(__dirname, "public")))
 
