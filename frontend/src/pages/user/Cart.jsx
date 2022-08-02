@@ -18,12 +18,14 @@ import {
 } from '@chakra-ui/react'
 import { useDispatch } from 'react-redux';
 import { UPDATE_CARTS } from "../../redux/actions/types";
+import ProductBanner from "./component/product/ProductBanner";
 
 const apiUrl = process.env.REACT_APP_API_URL
 
 function Cart() {
   const dispatch = useDispatch()
   const [carts, setCarts] = useState([])
+  const cartHeader = 'background-header'
   let totalPrice = 0
   const onHandleMinQty = (id) => {
 
@@ -97,7 +99,14 @@ function Cart() {
   }, [])
   return (
     <>
-      <Header />
+      <Header state={cartHeader} />
+      <div className="page-heading" style={{ paddingTop: "50px" }}>
+        <div className="container">
+          <div className="row">
+
+          </div>
+        </div>
+      </div>
       <section className="section" id="product">
         <div className="container">
           <div className="row">

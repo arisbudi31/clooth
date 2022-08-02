@@ -58,7 +58,7 @@ export default function AddAdmin() {
     }
 
     dispatch({ type: LOADING_START })
-    await Axios.post(API_URL + `/api/admin/${token}/add-admin`, bodyOnAddAdmin)
+    await Axios.post(API_URL + `/admin/${token}/add-admin`, bodyOnAddAdmin)
       .then((resp) => {
         dispatch({ type: LOADING_END })
         console.log(`respond when register admin:`, resp);
@@ -102,7 +102,7 @@ export default function AddAdmin() {
   }
 
   if (role !== 'BearerAdmin' || role === null) {
-    return (navigate('/user/login'))
+    return (navigate('/login'))
   }
 
   return (

@@ -11,12 +11,12 @@ const apiUrl = process.env.REACT_APP_API_URL
 
 export default function HomeAdmin() {
 
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const role = localStorage.getItem("akses")
-    const token = localStorage.getItem("tokenAdmin")
-    const keepLogin = localStorage.getItem("keepLogin")
-    const {loading} = useSelector(state => state.loading)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const role = localStorage.getItem("akses")
+  const token = localStorage.getItem("tokenAdmin")
+  const keepLogin = localStorage.getItem("keepLogin")
+  const { loading } = useSelector(state => state.loading)
 
 
   useEffect(() => {
@@ -38,16 +38,16 @@ export default function HomeAdmin() {
     dispatch({ type: LOADING_END })
   }
   else if (token === null) {
-    setTimeout(() => navigate('/admin/login'), 5000)
-    return (
-      <Box ml="100px" mt="50px" fontSize={"6xl"} fontWeight="extrabold">
-        <h1>You have to Log In first.</h1>
-      </Box>
-    )
+    navigate('/admin/login')
+    // return (
+    //   <Box ml="100px" mt="50px" fontSize={"6xl"} fontWeight="extrabold">
+    //     <h1>You have to Log In first.</h1>
+    //   </Box>
+    // )
   }
 
   if (role !== 'BearerAdmin' || role === null) {
-    return (navigate('/user/login'))
+    return (navigate('/login'))
   }
 
   return (
@@ -56,7 +56,7 @@ export default function HomeAdmin() {
       <Loading state={{ loading }} />
       <Box bgColor={"ButtonShadow"}>
         <div className="app-wrapper">
-          <div className="app-content pt-3 p-md-3 p-lg-4">
+          <div className="app-content pt-3 p-md-3 p-lg-4" style={{ marginTop: "60px" }}>
             <div className="container-xl">
               <text className="pagetitle h1">Dashboard</text>
               <div className="row g-4 mb-4">
@@ -131,41 +131,41 @@ export default function HomeAdmin() {
                 <div className="col-12 col-lg-6">
                   <div className="app-card app-card-chart h-100 shadow-sm">
 
-                                        <div className="app-card-header p-3">
-                                            <div className="row justify-content-between align-items-center">
-                                                <div className="col-auto">
-                                                    <h4 className="app-card-title">Line Chart Example</h4>
-                                                </div>
-                                                {/* <!--//col--> */}
-                                                <div className="col-auto">
-                                                    <div className="card-header-action">
-                                                        <a href="charts.html">More charts</a>
-                                                    </div>
-                                                    {/* <!--//card-header-actions--> */}
-                                                </div>
-                                                {/* <!--//col--> */}
-                                            </div>
-                                            {/* <!--//row--> */}
-                                        </div>
-                                        {/* <!--//app-card-header--> */}
-                                        <div className="app-card-body p-3 p-lg-4">
-                                            <div className="mb-3 d-flex">   
-                                                <select className="form-select form-select-sm ms-auto d-inline-flex w-auto">
-                                                    <option value="1" selected>This week</option>
-                                                    <option value="2">Today</option>
-                                                    <option value="3">This Month</option>
-                                                    <option value="3">This Year</option>
-                                                </select>
-                                            </div>
-                                            <div className="chart-container">
-                                                <canvas id="chart-line" ></canvas>
-                                            </div>
-                                        </div>
-                                        {/* <!--//app-card-body--> */}
-                                    </div>
-                                    {/* <!--//app-card--> */}
-                                </div>
-                                {/* <!--//col--> */}
+                    <div className="app-card-header p-3">
+                      <div className="row justify-content-between align-items-center">
+                        <div className="col-auto">
+                          <h4 className="app-card-title">Line Chart Example</h4>
+                        </div>
+                        {/* <!--//col--> */}
+                        <div className="col-auto">
+                          <div className="card-header-action">
+                            <a href="charts.html">More charts</a>
+                          </div>
+                          {/* <!--//card-header-actions--> */}
+                        </div>
+                        {/* <!--//col--> */}
+                      </div>
+                      {/* <!--//row--> */}
+                    </div>
+                    {/* <!--//app-card-header--> */}
+                    <div className="app-card-body p-3 p-lg-4">
+                      <div className="mb-3 d-flex">
+                        <select className="form-select form-select-sm ms-auto d-inline-flex w-auto">
+                          <option value="1" selected>This week</option>
+                          <option value="2">Today</option>
+                          <option value="3">This Month</option>
+                          <option value="3">This Year</option>
+                        </select>
+                      </div>
+                      <div className="chart-container">
+                        <canvas id="chart-line" ></canvas>
+                      </div>
+                    </div>
+                    {/* <!--//app-card-body--> */}
+                  </div>
+                  {/* <!--//app-card--> */}
+                </div>
+                {/* <!--//col--> */}
 
                 <div className="col-12 col-lg-6">
                   <div className="app-card app-card-chart h-100 shadow-sm">
@@ -189,26 +189,26 @@ export default function HomeAdmin() {
                     {/* <!--//app-card-header--> */}
 
 
-                                        <div className="app-card-body p-3 p-lg-4">
-                                            <div className="mb-3 d-flex">   
-                                                <select className="form-select form-select-sm ms-auto d-inline-flex w-auto">
-                                                    <option value="1" selected>This week</option>
-                                                    <option value="2">Today</option>
-                                                    <option value="3">This Month</option>
-                                                    <option value="3">This Year</option>
-                                                </select>
-                                            </div>
-                                            <div className="chart-container">
-                                                <canvas id="chart-bar" ></canvas>
-                                            </div>
-                                        </div>
-                                        {/* <!--//app-card-body--> */}
-                                    </div>
-                                    {/* <!--//app-card--> */}
-                                </div>
-                                {/* <!--//col--> */}
-                            </div>
-                            {/* <!--//row--> */}
+                    <div className="app-card-body p-3 p-lg-4">
+                      <div className="mb-3 d-flex">
+                        <select className="form-select form-select-sm ms-auto d-inline-flex w-auto">
+                          <option value="1" selected>This week</option>
+                          <option value="2">Today</option>
+                          <option value="3">This Month</option>
+                          <option value="3">This Year</option>
+                        </select>
+                      </div>
+                      <div className="chart-container">
+                        <canvas id="chart-bar" ></canvas>
+                      </div>
+                    </div>
+                    {/* <!--//app-card-body--> */}
+                  </div>
+                  {/* <!--//app-card--> */}
+                </div>
+                {/* <!--//col--> */}
+              </div>
+              {/* <!--//row--> */}
 
 
               <div className="row g-4 mb-4">

@@ -46,7 +46,7 @@ module.exports.getTotalCarts = async (req, res) => {
 
     const [totalCart] = await db.execute(TOTAL_CART)
 
-    if (totalCart[0] < 1) {
+    if (totalCart[0] < 0) {
       const responseStatus = new createResponse(
         httpStatus.BAD_REQUEST,
         'Error', false, 1, 1, 'Product belum ditambahkan dalam keranjang'
@@ -55,6 +55,8 @@ module.exports.getTotalCarts = async (req, res) => {
       res.status(responseStatus.status).send(responseStatus)
       throw new createError(httpStatus.BAD_REQUEST, 'Product belum ditambahkan dalam keranjang')
     }
+
+    console.log(totalCart[0])
 
     const responseStatus = new createResponse(
       httpStatus.OK,

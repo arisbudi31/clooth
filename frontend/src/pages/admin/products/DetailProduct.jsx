@@ -58,7 +58,7 @@ function DetailProduct() {
   }
 
   if (role !== 'BearerAdmin' || role === null) {
-    return (navigate('/user/login'))
+    return (navigate('/login'))
   }
 
   return (
@@ -66,7 +66,7 @@ function DetailProduct() {
       <Header />
       <div className="app-wrapper">
 
-        <div className="app-content pt-3 p-md-3 p-lg-4">
+        <div className="app-content pt-3 p-md-3 p-lg-4" style={{ marginTop: "60px" }}>
           <div className="container-xl">
             <div className="row g-3 mb-4 align-items-center justify-content-between">
               <div className="col-auto">
@@ -93,8 +93,7 @@ function DetailProduct() {
                           renderText={value => <span>{value}</span>}
                         /></Heading>
                         <p className="text-justify mb-3">{description}.</p>
-                        <Heading as={"h5"} size="sm">Stock: {stock}</Heading>
-                        <Heading as={"h5"} size="sm" className="badge badge-primary">Stock: {stock}</Heading>
+                        <Heading as={"h5"} size="sm" className="badge badge-primary mb-3">Stock: {stock}</Heading>
                         <span><Badge variant='solid' colorScheme='purple' className="p-1">{category}</Badge></span>
                       </div>
                     </div>

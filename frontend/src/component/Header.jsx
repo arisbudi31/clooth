@@ -17,7 +17,7 @@ function Header() {
 
   return (
     <>
-      <header className="app-header fixed-top">
+      <div className="app-header fixed-top">
         <div className="app-header-inner">
           <div className="container-fluid py-2">
             <div className="app-header-content">
@@ -32,26 +32,10 @@ function Header() {
                     </svg>
                   </a>
                 </div>
-                {/* <!--//col--> */}
                 <div className="search-mobile-trigger d-sm-none col">
                   <i className="search-mobile-trigger-icon fas fa-search"></i>
                 </div>
-                {/* <!--//col--> */}
-
-                {/* <!--//app-search-box--> */}
-                {/* content search box */}
-                {/* <!--//app-search-box--> */}
-
                 <div className="app-utilities col-auto">
-                  {/* <!--//app-utility-item-notification--> */}
-                  {/* content notification */}
-                  {/* <!--//app-utility-item-notification--> */}
-
-                  {/* <!--//app-utility-item-settings--> */}
-                  {/* content setting */}
-                  {/* <!--//app-utility-item-settings--> */}
-
-                  {/* <!--//app-user-dropdown--> */}
                   <div className="app-utility-item app-user-dropdown dropdown d-flex align-items-center">
                     <Text className="avatar-text">Welcome {admin.fullname}</Text>
                     <img className="mr-3" src="/assets/images/user.png" alt="user profile" />
@@ -67,9 +51,9 @@ function Header() {
                       <li><a className="dropdown-item" onClick={onButtonLogout} href="http://localhost:3000/admin/login">Log Out</a></li>
                     </ul>
                   </div>
-                  {/* <!--//app-user-dropdown--> */}
+
                 </div>
-                {/* <!--//app-utilities--> */}
+
               </div>
               {/* <!--//row--> */}
             </div>
@@ -82,7 +66,7 @@ function Header() {
         <Sidebar />
         {/* <!--//app-sidepanel--> */}
 
-      </header>
+      </div>
       {/* <!--//app-header--> */}
     </>
   )

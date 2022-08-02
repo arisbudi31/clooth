@@ -116,9 +116,6 @@ function Product() {
   }
 
   useEffect(() => {
-    // if (role !== 'BearerAdmin' || role === null) {
-    //   return (navigate('/user/login'))
-    // }
 
     setLoading(true)
     Axios.get(`${apiUrl}/product`, {
@@ -153,19 +150,18 @@ function Product() {
       })
   }, [search, category, currentPage, sort])
 
-  // useEffect(() => {
-  //   Axios.get(`${apiUrl}/all-category`)
-  //     .then(response => {
-  //       setLoading(false)
-  //       const data = response.data.data
-  //       setCategories(data)
-  //       dispatch({ type: 'GET_CATHEGORY', payload: data })
-  //     })
-  //     .catch(err => {
-  //       setLoading(false)
-  //       console.log(err)
-  //     })
-  // }, [])
+  useEffect(() => {
+    Axios.get(`${apiUrl}/all-category`)
+      .then(response => {
+        setLoading(false)
+        const data = response.data.data
+        dispatch({ type: 'GET_CATHEGORY', payload: data })
+      })
+      .catch(err => {
+        setLoading(false)
+        console.log(err)
+      })
+  }, [])
 
   if (keepLogin === 'false') {
     setTimeout(() => navigate('/admin/login'), 10000)
@@ -182,7 +178,7 @@ function Product() {
   }
 
   if (role !== 'BearerAdmin' || role === null) {
-    return (navigate('/user/login'))
+    return (navigate('/login'))
   }
 
   return (
@@ -191,7 +187,7 @@ function Product() {
       <Loading state={{ loading }} />
       <ModalDelete state={{ confirmDelete, onBtnCancel, onConfirmDelete }} />
       <div className="app-wrapper">
-        <div className="app-content pt-3 p-md-3 p-lg-4">
+        <div className="app-content pt-3 p-md-3 p-lg-4" style={{ marginTop: "60px" }}>
           <div className="container-xl">
             <div className="row g-3 mb-4 align-items-center justify-content-between">
               <div className="col-auto">

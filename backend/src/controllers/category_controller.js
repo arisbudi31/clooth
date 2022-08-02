@@ -8,7 +8,7 @@ const { categorySchema } = require("../helper/validation_schema")
 
 module.exports.getCategory = async (req, res) => {
 
-  const per_page = Number(req.query.per_page) || 3
+  const per_page = Number(req.query.per_page) || 5
   const current_page = Number(req.query.current_page) || 1
   const search = req.query.search || ""
   try {
@@ -191,7 +191,7 @@ module.exports.deleteCategory = async (req, res) => {
     }
 
     const CHECK_USAGE_CATEGORY = `SELECT * FROM products WHERE idCategory = ?; `
-    const [isUsage] = await db.execute(CHECK_CATEGORY, [idCategory])
+    const [isUsage] = await db.execute(CHECK_USAGE_CATEGORY, [idCategory])
 
     if (isUsage.length) {
       const responseStatus = new createResponse(

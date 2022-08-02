@@ -111,7 +111,7 @@ export default function Login() {
   }
 
   return (
-    <Box display={"flex"} mt="-8">
+    <Box display={"flex"} style={{ marginTop: "60px" }}>
       <Loading state={{ loading }} />
       <Box height={"100vh"} width={"74%"} ml="-40px">
         <img src={bgLogin} alt={"background"} />

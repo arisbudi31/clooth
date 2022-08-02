@@ -214,7 +214,7 @@ function FormProduct(props) {
   }
 
   if (role !== 'BearerAdmin' || role === null) {
-    return (navigate('/user/login'))
+    return (navigate('/login'))
   }
 
   return (

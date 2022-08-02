@@ -64,11 +64,11 @@ function About() {
             <div className="col-lg-4">
               <div className="team-item">
                 <div className="thumb">
-                  <img src="/assets_user/images/team-member-02.jpg" />
+                  <img src="/assets_user/images/arman.jpg" />
                 </div>
                 <div className="down-content">
-                  <h4>Ragnar Lodbrok</h4>
-                  <span>Product Caretaker</span>
+                  <h4>Arman Fahrizan Nugraha</h4>
+                  <span>Junior Developer 2</span>
                 </div>
               </div>
             </div>
@@ -78,8 +78,8 @@ function About() {
                   <img src="/assets_user/images/team-member-03.jpg" />
                 </div>
                 <div className="down-content">
-                  <h4>Ragnar Lodbrok</h4>
-                  <span>Product Caretaker</span>
+                  <h4>Martinus Andika</h4>
+                  <span>Junior Developer 3</span>
                 </div>
               </div>
             </div>

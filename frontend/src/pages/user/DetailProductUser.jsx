@@ -71,6 +71,13 @@ function DetailProductUser() {
   return (
     <>
       <Header />
+      <div className="page-heading" style={{ paddingTop: "50px" }}>
+        <div className="container">
+          <div className="row">
+
+          </div>
+        </div>
+      </div>
       <section className="section" id="product">
         <div className="container">
           <div className="row">

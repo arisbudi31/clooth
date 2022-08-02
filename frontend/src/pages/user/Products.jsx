@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import { useDispatch } from 'react-redux/es/exports';
 import NumberFormat from 'react-number-format';
 import { UPDATE_CARTS } from "../../redux/actions/types";
-import { Text } from "@chakra-ui/react"
 const apiUrl = process.env.REACT_APP_API_URL
 
 function Products() {
@@ -52,6 +51,7 @@ function Products() {
       .then(response => {
         const totalCart = response.data
 
+        console.log(totalCart?.total_count?.total_cart)
         dispatch({ type: UPDATE_CARTS, payload: { count: totalCart?.total_count?.total_cart } })
 
         toast({
@@ -81,6 +81,7 @@ function Products() {
         search: search,
         filter: category,
         sort: sort,
+        per_page: 6,
         current_page: currentPage,
       }
     })

@@ -72,7 +72,7 @@ function Stockopname() {
   }
 
   if (role !== 'BearerAdmin' || role === null) {
-    return (navigate('/user/login'))
+    return (navigate('/login'))
   }
 
 
@@ -82,7 +82,7 @@ function Stockopname() {
       <Loading state={{ loading }} />
       <div className="app-wrapper">
 
-        <div className="app-content pt-3 p-md-3 p-lg-4">
+        <div className="app-content pt-3 p-md-3 p-lg-4" style={{ marginTop: "60px" }}>
           <div className="container-xl">
 
             <div className="row g-3 mb-4 align-items-center justify-content-between">
